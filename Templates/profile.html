@@ -1,0 +1,409 @@
+{% extends 'base.html' %}
+
+{% block title %}Profile - MindPal{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+/* ===== Profile Page Styles ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #f8f9fa;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    min-height: 100vh;
+    color: #2d3748;
+}
+
+/* ===== Main Container ===== */
+.profile-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+}
+
+/* ===== Profile Header ===== */
+.profile-header {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    padding: 3rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.profile-avatar {
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    font-size: 3rem;
+    color: white;
+}
+
+.profile-name {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 0.5rem;
+}
+
+.profile-role {
+    color: #666;
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+}
+
+.profile-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 2rem;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-number {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #667eea;
+    display: block;
+}
+
+.stat-label {
+    color: #666;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* ===== Profile Content ===== */
+.profile-content {
+    display: grid;
+    gap: 2rem;
+}
+
+.profile-card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    padding: 2.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.profile-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #f8f9fa;
+}
+
+.card-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.card-icon {
+    font-size: 1.5rem;
+    color: #667eea;
+}
+
+/* ===== Account Information ===== */
+.info-grid {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 12px;
+    border: 1px solid #e9ecef;
+}
+
+.info-label {
+    font-weight: 600;
+    color: #495057;
+}
+
+.info-value {
+    color: #666;
+    font-family: monospace;
+}
+
+/* ===== Quick Actions ===== */
+.actions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.action-button {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: #f8f9fa;
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    text-decoration: none;
+    color: #495057;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.action-button:hover {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+    transform: translateY(-2px);
+    text-decoration: none;
+}
+
+.action-icon {
+    font-size: 1.3rem;
+}
+
+/* ===== Recent Activity ===== */
+.activity-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.activity-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 12px;
+    border-left: 4px solid #667eea;
+}
+
+.activity-icon {
+    width: 40px;
+    height: 40px;
+    background: #667eea;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1rem;
+}
+
+.activity-content {
+    flex: 1;
+}
+
+.activity-title {
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 0.3rem;
+}
+
+.activity-time {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+/* ===== Responsive Design ===== */
+@media (min-width: 768px) {
+    .profile-content {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .profile-card.full-width {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 768px) {
+    .profile-container {
+        padding: 0 1rem;
+    }
+    
+    .profile-header {
+        padding: 2rem;
+    }
+    
+    .profile-card {
+        padding: 2rem;
+    }
+    
+    .profile-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .actions-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ===== Accessibility ===== */
+@media (prefers-reduced-motion: reduce) {
+    .profile-card,
+    .action-button {
+        transition: none;
+    }
+}
+
+.action-button:focus,
+.profile-card:focus {
+    outline: 2px solid #667eea;
+    outline-offset: 2px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <!-- Profile Header -->
+    <div class="profile-header">
+        <div class="profile-avatar">
+            <i class="fas fa-user"></i>
+        </div>
+        <h1 class="profile-name">{{ username }}</h1>
+        <p class="profile-role">MindPal User</p>
+        <div class="profile-stats">
+            <div class="stat-item">
+                <span class="stat-number">5</span>
+                <span class="stat-label">Days Active</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">12</span>
+                <span class="stat-label">Sessions</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">3</span>
+                <span class="stat-label">Goals Set</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Content -->
+    <div class="profile-content">
+        <!-- Account Information -->
+        <div class="profile-card">
+            <div class="card-header">
+                <i class="fas fa-user-cog card-icon"></i>
+                <h2 class="card-title">Account Information</h2>
+            </div>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Username</span>
+                    <span class="info-value">{{ username }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Member Since</span>
+                    <span class="info-value">January 2025</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Account Type</span>
+                    <span class="info-value">Standard User</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Last Login</span>
+                    <span class="info-value">Today, 2:30 PM</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="profile-card">
+            <div class="card-header">
+                <i class="fas fa-bolt card-icon"></i>
+                <h2 class="card-title">Quick Actions</h2>
+            </div>
+            <div class="actions-grid">
+                <a href="/chatbot" class="action-button">
+                    <i class="fas fa-comments action-icon"></i>
+                    <span>Chat with AI</span>
+                </a>
+                <a href="/music" class="action-button">
+                    <i class="fas fa-music action-icon"></i>
+                    <span>Music Therapy</span>
+                </a>
+                <a href="/goals" class="action-button">
+                    <i class="fas fa-target action-icon"></i>
+                    <span>Set Goals</span>
+                </a>
+                <a href="/studytips" class="action-button">
+                    <i class="fas fa-book action-icon"></i>
+                    <span>Study Tips</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="profile-card full-width">
+            <div class="card-header">
+                <i class="fas fa-history card-icon"></i>
+                <h2 class="card-title">Recent Activity</h2>
+            </div>
+            <div class="activity-list">
+                <div class="activity-item">
+                    <div class="activity-icon">
+                        <i class="fas fa-music"></i>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-title">Started a relaxing music session</div>
+                        <div class="activity-time">2 hours ago</div>
+                    </div>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-title">Had a chat session with AI counselor</div>
+                        <div class="activity-time">1 day ago</div>
+                    </div>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-icon">
+                        <i class="fas fa-target"></i>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-title">Completed daily wellness goal</div>
+                        <div class="activity-time">2 days ago</div>
+                    </div>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-title">Viewed study tips and techniques</div>
+                        <div class="activity-time">3 days ago</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

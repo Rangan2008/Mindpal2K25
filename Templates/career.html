@@ -1,0 +1,417 @@
+{% extends 'base.html' %}
+
+{% block title %}MindPal - Career Stress{% endblock %}
+
+{% block extra_head %}
+<style>
+/* Enhanced Career Stress Page Styles */
+.academic-stress-page {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* Enhanced main heading with career theme */
+.dashboard h1 {
+    background: linear-gradient(135deg, #3498db 0%, #2980b9 50%, #1abc9c 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 3rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    animation: fadeInUp 0.8s ease-out;
+}
+
+/* Enhanced stress-row grid */
+.stress-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+    animation: fadeInUp 1s ease-out 0.2s both;
+}
+
+/* Enhanced stress cards with career theme */
+.stress-card, .stress-card-3, .stress-card-4, .stress-card-qd, .stress-card-sfh {
+    background: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
+    border: 1px solid rgba(52, 152, 219, 0.2);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 
+        0 8px 32px rgba(52, 152, 219, 0.15),
+        0 2px 8px rgba(0,0,0,0.05);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    min-height: 280px;
+}
+
+/* Card glow effects with career colors */
+.stress-card::before, .stress-card-3::before, 
+.stress-card-4::before, .stress-card-qd::before, .stress-card-sfh::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #3498db, #2980b9, #1abc9c);
+    border-radius: 20px 20px 0 0;
+}
+
+.stress-card:hover, .stress-card-3:hover, 
+.stress-card-4:hover, .stress-card-qd:hover, .stress-card-sfh:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 
+        0 20px 40px rgba(52, 152, 219, 0.25),
+        0 0 20px rgba(41, 128, 185, 0.4);
+    border-color: rgba(52, 152, 219, 0.4);
+}
+
+/* Enhanced card titles with career gradient */
+.card-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: #333;
+    background: linear-gradient(135deg, #3498db, #1abc9c);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Enhanced lists */
+.stress-card ul, .stress-card-3 ul, 
+.stress-card-4 ul, .stress-card-sfh ul {
+    list-style: none;
+    padding: 0;
+}
+
+.stress-card li, .stress-card-3 li, 
+.stress-card-4 li, .stress-card-sfh li {
+    padding: 0.7rem 0;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    position: relative;
+    padding-left: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.stress-card li::before, .stress-card-3 li::before, 
+.stress-card-4 li::before, .stress-card-sfh li::before {
+    content: '💼';
+    position: absolute;
+    left: 0;
+    font-size: 0.9rem;
+}
+
+.stress-card li:hover, .stress-card-3 li:hover, 
+.stress-card-4 li:hover, .stress-card-sfh li:hover {
+    padding-left: 2rem;
+    color: #2980b9;
+}
+
+.stress-card li:last-child, .stress-card-3 li:last-child, 
+.stress-card-4 li:last-child, .stress-card-sfh li:last-child {
+    border-bottom: none;
+}
+
+/* Enhanced links */
+.stress-card-3 a, .stress-card-sfh a {
+    color: #2980b9;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.stress-card-3 a:hover, .stress-card-sfh a:hover {
+    color: #1abc9c;
+    text-decoration: underline;
+    text-decoration-color: #3498db;
+}
+
+/* Enhanced textarea and buttons */
+.stress-card-qd textarea, #problemInput {
+    width: 100%;
+    padding: 1rem;
+    border: 2px solid rgba(52, 152, 219, 0.3);
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    resize: vertical;
+    background: rgba(255,255,255,0.8);
+    transition: all 0.3s ease;
+    margin-bottom: 1rem;
+}
+
+.stress-card-qd textarea:focus, #problemInput:focus {
+    outline: none;
+    border-color: #2980b9;
+    box-shadow: 0 0 0 3px rgba(41, 128, 185, 0.1);
+    background: rgba(255,255,255,0.95);
+}
+
+.stress-card-qd button, button {
+    background: linear-gradient(135deg, #3498db 0%, #1abc9c 100%);
+    color: white;
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: 25px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+}
+
+.stress-card-qd button:hover, button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4);
+    background: linear-gradient(135deg, #1abc9c 0%, #3498db 100%);
+}
+
+/* Response box styling */
+.response-box {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.1), rgba(26, 188, 156, 0.1));
+    border-left: 4px solid #3498db;
+    border-radius: 8px;
+    font-style: italic;
+    color: #333;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+/* Widget title styling */
+.widget-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: #333;
+    background: linear-gradient(135deg, #3498db, #1abc9c);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Enhanced explore section */
+.explore-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+    animation: fadeInUp 1.2s ease-out 0.4s both;
+}
+
+.explore-card {
+    background: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
+    border: 1px solid rgba(52, 152, 219, 0.2);
+    border-radius: 16px;
+    padding: 1.5rem;
+    text-decoration: none;
+    color: #333;
+    font-weight: 600;
+    text-align: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(52, 152, 219, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.explore-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #3498db, #1abc9c);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+}
+
+.explore-card:hover::before {
+    transform: translateX(0);
+}
+
+.explore-card:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 12px 30px rgba(52, 152, 219, 0.2);
+    color: #2980b9;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .academic-stress-page {
+        padding: 1rem;
+    }
+    
+    .dashboard h1 {
+        font-size: 2rem;
+        margin-bottom: 2rem;
+    }
+    
+    .stress-row {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .stress-card, .stress-card-3, .stress-card-4, .stress-card-qd, .stress-card-sfh {
+        padding: 1.5rem;
+        min-height: auto;
+    }
+    
+    .explore-section {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .stress-card, .stress-card-3, .stress-card-4, .stress-card-qd, .stress-card-sfh {
+        padding: 1rem;
+    }
+    
+    .card-title {
+        font-size: 1.1rem;
+    }
+    
+    .dashboard h1 {
+        font-size: 1.8rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="dashboard">
+    <h1 style="text-align:center;padding-top: 50px; padding-bottom: 30px;">🧑‍💼 Career Stress</h1>
+    <div class="academic-stress-page">
+        <section class="stress-row"
+            style="display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, auto); gap: 2rem;">
+            <div class="stress-card">
+                <h3 class="card-title">📌 Common Career Issues</h3>
+                <ul>
+                    <li>Uncertainty about future</li>
+                    <li>Pressure to choose the right path</li>
+                    <li>Job market competition</li>
+                    <li>Lack of experience</li>
+                    <li>Balancing work and study</li>
+                </ul>
+            </div>
+            <div class="stress-card">
+                <h3 class="card-title">🧠 Impact on Wellbeing</h3>
+                <ul>
+                    <li>Stress and anxiety</li>
+                    <li>Low confidence</li>
+                    <li>Fear of failure</li>
+                    <li>Procrastination</li>
+                </ul>
+            </div>
+            <div class="stress-card">
+                <h3 class="card-title">🛠️ Coping Strategies</h3>
+                <ul>
+                    <li>Seek career counseling</li>
+                    <li>Build a strong resume</li>
+                    <li>Network with professionals</li>
+                    <li>Set realistic goals</li>
+                    <li>Practice interview skills</li>
+                </ul>
+            </div>
+            <div class="stress-card-3">
+                <h3 class="card-title">🔗 Helpful Resources</h3>
+                <ul>
+                    <li><a href="https://www.linkedin.com/learning/" target="_blank">LinkedIn Learning</a></li>
+                    <li><a href="https://www.coursera.org/" target="_blank">Coursera</a></li>
+                    <li><a href="https://www.indeed.com/career-advice" target="_blank">Indeed Career Advice</a></li>
+                    <li><a href="https://www.glassdoor.com/" target="_blank">Glassdoor (Company Reviews)</a></li>
+                    <li><a href="https://www.themuse.com/" target="_blank">The Muse (Career Advice & Jobs)</a></li>
+                    <li><a href="https://zety.com/resume-builder" target="_blank">Zety Resume Builder</a></li>
+
+                </ul>
+            </div>
+            <div class="stress-card-4">
+                <h3 class="card-title">🎯 Career Planning</h3>
+                <ul>
+                    <li><strong>Research:</strong> Explore different career options and industries.</li>
+                    <li><strong>Skill Building:</strong> Take online courses to improve your skills.</li>
+                    <li><strong>Mentorship:</strong> Find a mentor for guidance and support.</li>
+                    <li><strong>Internships:</strong> Gain experience through internships or volunteering.</li>
+                    <li><strong>Work-Life Balance:</strong> Prioritize self-care and downtime.</li>
+                </ul>
+            </div>
+            <div class="stress-card-qd">
+                <h3 class="card-title">📋 Quick Career Goals</h3>
+                <textarea placeholder="Write 3 career goals for this month..." rows="4"></textarea>
+                <button onclick="alert('Goals saved!')">Save</button>
+            </div>
+        </section>
+    </div>
+    <section class="widgets-row" style="margin-top: 2rem;">
+        <div class="stress-card-4" style="flex: 1 1 100%;">
+            <h3 class="widget-title">❓ Share Your Career Concern</h3>
+            <textarea id="careerInput" placeholder="Describe your career stress or question here..."
+                rows="5"></textarea>
+            <button onclick="giveCareerAdvice()">Get Advice</button>
+            <div id="careerAdvice" class="response-box"></div>
+        </div>
+    </section>
+    <section style="margin-top: 3rem;">
+        <h2 style="text-align:center; margin-bottom: 3.5rem;">🧩 Explore Common Student Stress Topics</h2>
+        <div class="explore-section">
+            <a class="explore-card" href="{{ url_for('academic') }}">📚Academic Stress</a>
+            <a class="explore-card" href="{{ url_for('financial') }}">💸Financial Stress</a>
+            <a class="explore-card" href="{{ url_for('career') }}">🧑‍💼Career Stress</a>
+            <a class="explore-card" href="{{ url_for('time') }}">⏰Time Management</a>
+            <a class="explore-card" href="{{ url_for('pmh') }}">🧘Physical & Mental Health</a>
+        </div>
+    </section>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function giveCareerAdvice() {
+        const input = document.getElementById('careerInput').value.toLowerCase().trim();
+        const responseBox = document.getElementById('careerAdvice');
+
+        if (!input) {
+            responseBox.textContent = "Please describe your concern so we can help.";
+            return;
+        }
+
+        let advice = "";
+
+        if (input.includes('resume') || input.includes('cv')) {
+            advice = "Tailor your resume to each job and highlight relevant skills and experiences.";
+        } else if (input.includes('interview')) {
+            advice = "Practice common interview questions and research the company beforehand.";
+        } else if (input.includes('network')) {
+            advice = "Attend networking events and connect with professionals on LinkedIn.";
+        } else if (input.includes('skills') || input.includes('courses')) {
+            advice = "Take online courses to build in-demand skills for your field.";
+        } else {
+            advice = "Set clear goals, seek mentorship, and remember that career paths can change and evolve.";
+        }
+
+        responseBox.textContent = advice;
+    }
+</script>
+{% endblock %}

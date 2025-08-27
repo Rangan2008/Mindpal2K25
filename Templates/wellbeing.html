@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}MindPal - Wellbeing{% endblock %}
+
+{% block extra_head %}
+{% endblock %}
+
+{% block content %}
+<main class="dashboard">
+  <h1 style="text-align:center; padding-top: 50px; padding-bottom: 30px;">🌱 Your Wellbeing Space</h1>
+
+  <section class="widgets-row">
+    <div class="widget centered-widget">
+      <h3 class="widget-title">How are you feeling?</h3>
+      <select id="mood-select">
+        <option value="😊">😊 Happy</option>
+        <option value="😟">😟 Stressed</option>
+        <option value="😐">😐 Meh</option>
+        <option value="😢">😢 Sad</option>
+        <option value="😴">😴 Tired</option>
+      </select>
+    </div>
+
+    <div class="widget">
+      <h3>Breathing Bubble</h3>
+      <div class="bubble" id="bubble"></div>
+      <button onclick="startBreathing()">Start</button>
+      <div id="breathing-instruction" style="display:none; margin-top:10px; color:#4a90e2; font-weight:500;">Follow the bubble: Inhale as it grows, hold, then exhale as it shrinks. Click Start again to stop.</div>
+    </div>
+
+    <div class="widget centered-widget">
+      <h3 class="widget-title">Daily Motivation</h3>
+      <p id="daily-quote">Loading...</p>
+    </div>
+
+    <div class="widget">
+      <h3>📝 Write a Quick Journal</h3>
+      <textarea id="journal-content" placeholder="Express your thoughts here... How are you feeling today?" rows="4"></textarea>
+      <div class="journal-actions">
+        <button id="save-journal-btn" class="journal-save-btn">💾 Save Entry</button>
+        <span id="journal-status" class="journal-status"></span>
+      </div>
+    </div>
+    
+    <div class="widget">
+      <h3>🧘 Self-care Tip</h3>
+      <p id="tip-display">Take a 5-minute walk outside.</p>
+      <button onclick="nextTip()">💡 Next Tip</button>
+    </div>
+
+    <div class="widget centered-widget">
+      <h3>🙏 Gratitude Count</h3>
+      <p>Things you're grateful for today:</p>
+      <h2 id="grat-count">0</h2>
+      <button onclick="incrementGratitude()">➕ Add One</button>
+    </div>
+  </section>
+
+  <section style="margin-top: 3rem;">
+    <h2 style="text-align:center; margin-bottom: 3.5rem;">🧩 Explore Common Student Stress Topics</h2>
+    <div class="explore-section">
+      <a class="explore-card" href="{{ url_for('academic') }}">📚Academic Stress</a>
+      <a class="explore-card" href="{{ url_for('financial') }}">💸Financial Stress</a>
+      <a class="explore-card" href="{{ url_for('career') }}">🧑‍💼Career Stress</a>
+      <a class="explore-card" href="{{ url_for('time') }}">⏰Time Management</a>
+      <a class="explore-card" href="{{ url_for('pmh') }}">🧘Physical & Mental Health</a>
+
+    </div>
+  </section>
+</main>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='Js/wellbeing.js') }}"></script>
+{% endblock %}

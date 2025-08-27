@@ -1,0 +1,780 @@
+{% extends 'base.html' %}
+
+{% block title %}Study Tips - MindPal{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+/* ===== Global Styles ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-primary);
+    background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 50%, #fff3e0 100%);
+    min-height: 100vh;
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+[data-theme="dark"] body {
+    background: linear-gradient(135deg, #181a1b 0%, #23272f 50%, #2c313a 100%);
+}
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+/* ===== Hero Section ===== */
+.hero {
+    padding: 5rem 0;
+    text-align: center;
+    color: var(--text-color);
+    position: relative;
+    overflow: hidden;
+}
+
+[data-theme="dark"] .hero {
+    background: transparent;
+}
+
+.hero-overlay {
+    position: relative;
+    z-index: 2;
+}
+
+.hero h1 {
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    color: var(--text-color); /* Use variable */
+}
+
+/* Ensure h1 gradient is reapplied in dark mode */
+[data-theme="dark"] .hero h1 {
+    background: linear-gradient(135deg, #90caf9 0%, #b39ddb 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+
+.hero p {
+    font-size: 1.3rem;
+    opacity: 0.9;
+    max-width: 600px;
+    margin: 0 auto;
+    color: var(--text-color); /* Use variable */
+}
+
+/* ===== Section Styles ===== */
+.section {
+    padding: 4rem 0;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 1rem;
+    color: var(--primary-blue);
+}
+
+
+.section-subtitle {
+    font-size: 1.1rem;
+    text-align: center;
+    color: var(--text-color);
+    max-width: 700px;
+    margin: 0 auto 3rem;
+}
+
+/* ===== Introduction Section ===== */
+.explore-summary {
+    padding: 3rem;
+    text-align: center;
+    background: var(--white);
+    border-radius: var(--radius-large);
+    box-shadow: var(--shadow-light);
+}
+
+[data-theme="dark"] .explore-summary {
+    background: var(--medium-gray);
+}
+
+.explore-summary h3 {
+    font-size: 2rem;
+    color: var(--primary-blue);
+    margin-bottom: 1rem;
+}
+
+.explore-summary p {
+    font-size: 1.1rem;
+    color: var(--text-color);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* ===== Study Tips Grid ===== */
+.dashboard {
+    padding: 4rem 0;
+}
+
+.widgets-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.widget {
+    background: var(--white);
+    padding: 2.5rem;
+    border-radius: var(--radius-large);
+    box-shadow: var(--shadow-light);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(102, 126, 234, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+[data-theme="dark"] .widget {
+    background: var(--medium-gray);
+    border-color: rgba(144, 202, 249, 0.2);
+}
+
+.widget::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gradient-primary);
+}
+
+.widget:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-medium);
+}
+
+.widget h3 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+
+.widget h3 i {
+    font-size: 1.2rem;
+    color: var(--primary-blue);
+}
+
+.widget p {
+    color: var(--text-color);
+    line-height: 1.7;
+    font-size: 1rem;
+}
+
+/* ===== Advanced Tips Section ===== */
+.advanced-tips {
+    background: var(--light-gray);
+    padding: 4rem 0;
+    border-radius: var(--radius-large);
+}
+
+[data-theme="dark"] .advanced-tips {
+    background: var(--medium-gray);
+}
+
+.techniques-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.technique-card {
+    background: var(--white);
+    padding: 2rem;
+    border-radius: var(--radius-medium);
+    box-shadow: var(--shadow-light);
+    transition: all 0.3s ease;
+}
+
+[data-theme="dark"] .technique-card {
+    background: var(--light-gray);
+}
+
+.technique-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-medium);
+}
+
+.technique-icon {
+    width: 60px;
+    height: 60px;
+    background: var(--gradient-primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--white);
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+[data-theme="dark"] .technique-icon {
+    color: var(--black);
+}
+
+.technique-card h4 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--text-color);
+}
+
+
+.technique-card p {
+    color: var(--text-color);
+    margin-bottom: 1rem;
+}
+
+.technique-card .benefits {
+    list-style: none;
+    padding: 0;
+}
+
+.technique-card .benefits li {
+    padding: 0.3rem 0;
+    color: var(--text-color);
+    position: relative;
+    padding-left: 1.5rem;
+}
+
+.technique-card .benefits li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--primary-blue);
+    font-weight: bold;
+}
+
+/* ===== Study Environment Section ===== */
+.study-environment {
+    padding: 4rem 0;
+}
+
+.environment-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.environment-item {
+    background: var(--white);
+    padding: 1.5rem;
+    border-radius: var(--radius-medium);
+    box-shadow: var(--shadow-light);
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+[data-theme="dark"] .environment-item {
+    background: var(--medium-gray);
+}
+
+.environment-item:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-medium);
+}
+
+.environment-item i {
+    font-size: 2rem;
+    color: var(--primary-blue);
+    margin-bottom: 1rem;
+}
+
+.environment-item h5 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--text-color);
+}
+
+
+.environment-item p {
+    font-size: 0.9rem;
+    color: var(--text-color);
+}
+
+/* ===== Memory Techniques Section ===== */
+.memory-techniques {
+    background: var(--light-gray);
+    padding: 4rem 0;
+    border-radius: var(--radius-large);
+}
+
+[data-theme="dark"] .memory-techniques {
+    background: var(--medium-gray);
+}
+
+.memory-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.memory-card {
+    background: var(--white);
+    padding: 2rem;
+    border-radius: var(--radius-medium);
+    box-shadow: var(--shadow-light);
+    border-left: 5px solid var(--primary-blue);
+    transition: all 0.3s ease;
+}
+
+[data-theme="dark"] .memory-card {
+    background: var(--light-gray);
+}
+
+.memory-card:hover {
+    transform: translateX(5px);
+    box-shadow: var(--shadow-medium);
+}
+
+.memory-card h4 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--text-color);
+}
+
+
+.memory-card .example {
+    background: var(--light-gray);
+    padding: 1rem;
+    border-radius: var(--radius-small);
+    margin-top: 1rem;
+    font-style: italic;
+    color: var(--text-color);
+    border-left: 3px solid var(--primary-blue);
+}
+
+[data-theme="dark"] .memory-card .example {
+    background: var(--dark-gray);
+    color: var(--light-gray);
+}
+
+/* ===== Quick Tips Section ===== */
+.quick-tips {
+    padding: 4rem;
+    background: var(--gradient-primary);
+    color: var(--white);
+    border-radius: var(--radius-large);
+}
+
+[data-theme="dark"] .quick-tips {
+    background: var(--gradient-secondary);
+}
+
+[data-theme="dark"] .quick-tips .section-title,
+[data-theme="dark"] .quick-tips .section-subtitle,
+[data-theme="dark"] .quick-tips h5,
+[data-theme="dark"] .quick-tips p {
+    color: var(--black);
+}
+
+.quick-tips .section-title,
+.quick-tips .section-subtitle {
+    color: var(--white);
+}
+
+.tips-carousel {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.tip-bubble {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    padding: 1.5rem;
+    border-radius: var(--radius-medium);
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+}
+
+[data-theme="dark"] .tip-bubble {
+    background: rgba(0, 0, 0, 0.2);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.tip-bubble:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-3px);
+}
+
+[data-theme="dark"] .tip-bubble:hover {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.tip-bubble i {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.tip-bubble h5 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.tip-bubble p {
+    font-size: 0.85rem;
+    opacity: 0.9;
+}
+
+/* ===== Responsive Design ===== */
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 2.5rem;
+    }
+    
+    .hero p {
+        font-size: 1.1rem;
+    }
+    
+    .container {
+        padding: 0 1rem;
+    }
+    
+    .widgets-row {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .widget {
+        padding: 2rem;
+    }
+    
+    .section-title {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero {
+        padding: 3rem 0;
+    }
+    
+    .hero h1 {
+        font-size: 2rem;
+    }
+    
+    .widget {
+        padding: 1.5rem;
+    }
+    
+    .section {
+        padding: 3rem 0;
+    }
+}
+
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero" style="margin-top: 50px;">
+  <div class="hero-overlay">
+    <h1>📘 Master Your Study Game</h1>
+    <p>Evidence-based techniques to boost your learning, memory, and academic success</p>
+  </div>
+</section>
+
+<!-- Tips Introduction -->
+<section class="explore-summary">
+  <h3>Why Study Smart?</h3>
+  <p>Using evidence-based study techniques reduces stress and improves retention. Let’s explore!</p>
+</section>
+
+<!-- Tips Cards Section -->
+<section class="dashboard">
+  <div class="widgets-row">
+    <div class="widget">
+      <h3><i class="fa-solid fa-calendar-check"></i> Plan Your Day</h3>
+      <p>Create a to-do list and prioritize. A structured day improves efficiency and focus.</p>
+    </div>
+
+    <div class="widget">
+      <h3><i class="fa-solid fa-stopwatch"></i> Pomodoro Technique</h3>
+      <p>Study in 25-min blocks with 5-min breaks. Keeps your mind sharp and avoids burnout.</p>
+    </div>
+
+    <div class="widget">
+      <h3><i class="fa-solid fa-desk"></i> Organized Study Space</h3>
+      <p>Clean space = Clear mind. Eliminate distractions and organize essentials.</p>
+    </div>
+  </div>
+
+  <div class="widgets-row">
+    <div class="widget">
+      <h3><i class="fa-solid fa-pen-nib"></i> Take Active Notes</h3>
+      <p>Write, summarize, and use diagrams. Engage with the material, don’t just read it.</p>
+    </div>
+
+    <div class="widget">
+      <h3><i class="fa-solid fa-brain"></i> Recall & Repeat</h3>
+      <p>Practice retrieval and spaced repetition. These methods are scientifically backed for memory.</p>
+    </div>
+
+    <div class="widget">
+      <h3><i class="fa-solid fa-bed"></i> Sleep & Recovery</h3>
+      <p>Aim for 7-9 hours of quality sleep. Your brain consolidates memories during sleep. Stay hydrated and take regular breaks to maintain peak cognitive performance.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Advanced Learning Techniques -->
+<section class="advanced-tips section">
+  <div class="container">
+    <h2 class="section-title">🚀 Advanced Learning Techniques</h2>
+    <p class="section-subtitle">Take your learning to the next level with these powerful cognitive strategies</p>
+    
+    <div class="techniques-grid">
+      <div class="technique-card">
+        <div class="technique-icon">
+          <i class="fas fa-question-circle"></i>
+        </div>
+        <h4>The Feynman Technique</h4>
+        <p>Explain concepts in simple terms as if teaching a child. This identifies gaps in understanding and deepens comprehension.</p>
+        <ul class="benefits">
+          <li>Improves understanding</li>
+          <li>Identifies knowledge gaps</li>
+          <li>Builds confidence</li>
+          <li>Enhances communication skills</li>
+        </ul>
+      </div>
+
+      <div class="technique-card">
+        <div class="technique-icon">
+          <i class="fas fa-sync-alt"></i>
+        </div>
+        <h4>Retrieval Practice</h4>
+        <p>Test yourself regularly without looking at notes. Use flashcards, practice problems, and self-quizzing to strengthen memory pathways.</p>
+        <ul class="benefits">
+          <li>Strengthens memory</li>
+          <li>Improves exam performance</li>
+          <li>Builds confidence</li>
+          <li>Identifies weak areas</li>
+        </ul>
+      </div>
+
+      <div class="technique-card">
+        <div class="technique-icon">
+          <i class="fas fa-puzzle-piece"></i>
+        </div>
+        <h4>Interleaving</h4>
+        <p>Mix different topics or subjects in a single study session rather than studying one topic for hours. This improves problem-solving skills.</p>
+        <ul class="benefits">
+          <li>Better discrimination</li>
+          <li>Improved problem-solving</li>
+          <li>Enhanced flexibility</li>
+          <li>Real-world preparation</li>
+        </ul>
+      </div>
+
+      <div class="technique-card">
+        <div class="technique-icon">
+          <i class="fas fa-link"></i>
+        </div>
+        <h4>Elaborative Interrogation</h4>
+        <p>Ask "why" and "how" questions about the material. Connect new information to existing knowledge to create meaningful associations.</p>
+        <ul class="benefits">
+          <li>Deeper understanding</li>
+          <li>Better retention</li>
+          <li>Critical thinking</li>
+          <li>Knowledge integration</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Study Environment Optimization -->
+<section class="study-environment section">
+  <div class="container">
+    <h2 class="section-title">🏠 Perfect Study Environment</h2>
+    <p class="section-subtitle">Create an environment that naturally promotes focus and productivity</p>
+    
+    <div class="environment-grid">
+      <div class="environment-item">
+        <i class="fas fa-lightbulb"></i>
+        <h5>Proper Lighting</h5>
+        <p>Natural light or bright LED lamps reduce eye strain and maintain alertness</p>
+      </div>
+      
+      <div class="environment-item">
+        <i class="fas fa-thermometer-half"></i>
+        <h5>Ideal Temperature</h5>
+        <p>68-72°F (20-22°C) is optimal for concentration and cognitive performance</p>
+      </div>
+      
+      <div class="environment-item">
+        <i class="fas fa-volume-off"></i>
+        <h5>Noise Control</h5>
+        <p>Quiet environment or white noise. Use noise-cancelling headphones if needed</p>
+      </div>
+      
+      <div class="environment-item">
+        <i class="fas fa-chair"></i>
+        <h5>Ergonomic Setup</h5>
+        <p>Comfortable chair and proper desk height prevent fatigue and distraction</p>
+      </div>
+      
+      <div class="environment-item">
+        <i class="fas fa-mobile-alt"></i>
+        <h5>Digital Minimalism</h5>
+        <p>Keep phone in another room. Use website blockers during study time</p>
+      </div>
+      
+      <div class="environment-item">
+        <i class="fas fa-leaf"></i>
+        <h5>Natural Elements</h5>
+        <p>Plants improve air quality and create a calming, productive atmosphere</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Memory Techniques -->
+<section class="memory-techniques section">
+  <div class="container">
+    <h2 class="section-title">🧠 Memory Enhancement Techniques</h2>
+    <p class="section-subtitle">Powerful methods to improve information retention and recall</p>
+    
+    <div class="memory-grid">
+      <div class="memory-card">
+        <h4>Memory Palace (Method of Loci)</h4>
+        <p>Associate information with familiar locations in your mind. Walk through the location to recall the information in order.</p>
+        <div class="example">
+          <strong>Example:</strong> To remember a grocery list, visualize walking through your house - milk in the entryway, bread in the living room, apples in the kitchen.
+        </div>
+      </div>
+
+      <div class="memory-card">
+        <h4>Acronyms & Mnemonics</h4>
+        <p>Create memorable phrases or words from the first letters of items you need to remember.</p>
+        <div class="example">
+          <strong>Example:</strong> "My Very Educated Mother Just Served Us Nachos" for the planets: Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune.
+        </div>
+      </div>
+
+      <div class="memory-card">
+        <h4>Chunking</h4>
+        <p>Break large amounts of information into smaller, manageable groups of 5-7 items.</p>
+        <div class="example">
+          <strong>Example:</strong> Remember phone number 5551234567 as 555-123-4567 (three chunks instead of ten digits).
+        </div>
+      </div>
+
+      <div class="memory-card">
+        <h4>Visual Imagery</h4>
+        <p>Create vivid, unusual mental images to make information more memorable. The more bizarre, the better!</p>
+        <div class="example">
+          <strong>Example:</strong> To remember "elephant" and "telephone," imagine an elephant talking on a giant phone with its trunk.
+        </div>
+      </div>
+
+      <div class="memory-card">
+        <h4>Story Method</h4>
+        <p>Link unrelated items together in a memorable story narrative.</p>
+        <div class="example">
+          <strong>Example:</strong> For shopping list: "The curious CAT ate a BANANA while reading a BOOK about MILK recipes."
+        </div>
+      </div>
+
+      <div class="memory-card">
+        <h4>Rhymes & Songs</h4>
+        <p>Set information to familiar melodies or create rhyming patterns for better recall.</p>
+        <div class="example">
+          <strong>Example:</strong> "In fourteen hundred ninety-two, Columbus sailed the ocean blue" for historical dates.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Quick Tips -->
+<section class="quick-tips section" style="margin-top: 40px;">
+  <div class="container">
+    <h2 class="section-title">⚡ Quick Study Hacks</h2>
+    <p class="section-subtitle">Simple tricks that make a big difference in your learning</p>
+    
+    <div class="tips-carousel">
+      <div class="tip-bubble">
+        <i class="fas fa-coffee"></i>
+        <h5>Strategic Caffeine</h5>
+        <p>Drink coffee 30 minutes before studying for peak alertness</p>
+      </div>
+      
+      <div class="tip-bubble">
+        <i class="fas fa-music"></i>
+        <h5>Background Music</h5>
+        <p>Classical or lo-fi instrumental music can enhance focus</p>
+      </div>
+      
+      <div class="tip-bubble">
+        <i class="fas fa-walking"></i>
+        <h5>Walking Breaks</h5>
+        <p>5-minute walks boost creativity and reduce mental fatigue</p>
+      </div>
+      
+      <div class="tip-bubble">
+        <i class="fas fa-apple-alt"></i>
+        <h5>Brain Foods</h5>
+        <p>Blueberries, nuts, and dark chocolate support cognitive function</p>
+      </div>
+      
+      <div class="tip-bubble">
+        <i class="fas fa-eye"></i>
+        <h5>20-20-20 Rule</h5>
+        <p>Every 20 minutes, look at something 20 feet away for 20 seconds</p>
+      </div>
+      
+      <div class="tip-bubble">
+        <i class="fas fa-sun"></i>
+        <h5>Morning Sessions</h5>
+        <p>Study challenging material when your mind is freshest</p>
+      </div>
+      
+      <div class="tip-bubble">
+        <i class="fas fa-users"></i>
+        <h5>Study Groups</h5>
+        <p>Explaining concepts to others reinforces your understanding</p>
+      </div>
+      
+      <div class="tip-bubble">
+        <i class="fas fa-bookmark"></i>
+        <h5>Color Coding</h5>
+        <p>Use different colors for different subjects or difficulty levels</p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

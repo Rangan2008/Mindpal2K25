@@ -1,0 +1,414 @@
+{% extends 'base.html' %}
+
+{% block title %}MindPal - Time Management{% endblock %}
+
+{% block extra_head %}
+<style>
+/* Enhanced Time Management Page Styles */
+.academic-stress-page {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* Enhanced main heading with time theme */
+.dashboard h1 {
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 50%, #ff6b6b 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 3rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    animation: fadeInUp 0.8s ease-out;
+}
+
+/* Enhanced stress-row grid */
+.stress-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+    animation: fadeInUp 1s ease-out 0.2s both;
+}
+
+/* Enhanced stress cards with time theme */
+.stress-card, .stress-card-3, .stress-card-4, .stress-card-qd, .stress-card-sfh {
+    background: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
+    border: 1px solid rgba(231, 76, 60, 0.2);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 
+        0 8px 32px rgba(231, 76, 60, 0.15),
+        0 2px 8px rgba(0,0,0,0.05);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    min-height: 280px;
+}
+
+/* Card glow effects with time colors */
+.stress-card::before, .stress-card-3::before, 
+.stress-card-4::before, .stress-card-qd::before, .stress-card-sfh::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #e74c3c, #c0392b, #ff6b6b);
+    border-radius: 20px 20px 0 0;
+}
+
+.stress-card:hover, .stress-card-3:hover, 
+.stress-card-4:hover, .stress-card-qd:hover, .stress-card-sfh:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 
+        0 20px 40px rgba(231, 76, 60, 0.25),
+        0 0 20px rgba(192, 57, 43, 0.4);
+    border-color: rgba(231, 76, 60, 0.4);
+}
+
+/* Enhanced card titles with time gradient */
+.card-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: #333;
+    background: linear-gradient(135deg, #e74c3c, #ff6b6b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Enhanced lists */
+.stress-card ul, .stress-card-3 ul, 
+.stress-card-4 ul, .stress-card-sfh ul {
+    list-style: none;
+    padding: 0;
+}
+
+.stress-card li, .stress-card-3 li, 
+.stress-card-4 li, .stress-card-sfh li {
+    padding: 0.7rem 0;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    position: relative;
+    padding-left: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.stress-card li::before, .stress-card-3 li::before, 
+.stress-card-4 li::before, .stress-card-sfh li::before {
+    content: '⏱️';
+    position: absolute;
+    left: 0;
+    font-size: 0.9rem;
+}
+
+.stress-card li:hover, .stress-card-3 li:hover, 
+.stress-card-4 li:hover, .stress-card-sfh li:hover {
+    padding-left: 2rem;
+    color: #c0392b;
+}
+
+.stress-card li:last-child, .stress-card-3 li:last-child, 
+.stress-card-4 li:last-child, .stress-card-sfh li:last-child {
+    border-bottom: none;
+}
+
+/* Enhanced links */
+.stress-card-3 a, .stress-card-sfh a {
+    color: #c0392b;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.stress-card-3 a:hover, .stress-card-sfh a:hover {
+    color: #ff6b6b;
+    text-decoration: underline;
+    text-decoration-color: #e74c3c;
+}
+
+/* Enhanced textarea and buttons */
+.stress-card-qd textarea, #problemInput {
+    width: 100%;
+    padding: 1rem;
+    border: 2px solid rgba(231, 76, 60, 0.3);
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    resize: vertical;
+    background: rgba(255,255,255,0.8);
+    transition: all 0.3s ease;
+    margin-bottom: 1rem;
+}
+
+.stress-card-qd textarea:focus, #problemInput:focus {
+    outline: none;
+    border-color: #c0392b;
+    box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.1);
+    background: rgba(255,255,255,0.95);
+}
+
+.stress-card-qd button, button {
+    background: linear-gradient(135deg, #e74c3c 0%, #ff6b6b 100%);
+    color: white;
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: 25px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+}
+
+.stress-card-qd button:hover, button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(231, 76, 60, 0.4);
+    background: linear-gradient(135deg, #ff6b6b 0%, #e74c3c 100%);
+}
+
+/* Response box styling */
+.response-box {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: linear-gradient(135deg, rgba(231, 76, 60, 0.1), rgba(255, 107, 107, 0.1));
+    border-left: 4px solid #e74c3c;
+    border-radius: 8px;
+    font-style: italic;
+    color: #333;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+/* Widget title styling */
+.widget-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: #333;
+    background: linear-gradient(135deg, #e74c3c, #ff6b6b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Enhanced explore section */
+.explore-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+    animation: fadeInUp 1.2s ease-out 0.4s both;
+}
+
+.explore-card {
+    background: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
+    border: 1px solid rgba(231, 76, 60, 0.2);
+    border-radius: 16px;
+    padding: 1.5rem;
+    text-decoration: none;
+    color: #333;
+    font-weight: 600;
+    text-align: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(231, 76, 60, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.explore-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #e74c3c, #ff6b6b);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+}
+
+.explore-card:hover::before {
+    transform: translateX(0);
+}
+
+.explore-card:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 12px 30px rgba(231, 76, 60, 0.2);
+    color: #c0392b;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .academic-stress-page {
+        padding: 1rem;
+    }
+    
+    .dashboard h1 {
+        font-size: 2rem;
+        margin-bottom: 2rem;
+    }
+    
+    .stress-row {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .stress-card, .stress-card-3, .stress-card-4, .stress-card-qd, .stress-card-sfh {
+        padding: 1.5rem;
+        min-height: auto;
+    }
+    
+    .explore-section {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .stress-card, .stress-card-3, .stress-card-4, .stress-card-qd, .stress-card-sfh {
+        padding: 1rem;
+    }
+    
+    .card-title {
+        font-size: 1.1rem;
+    }
+    
+    .dashboard h1 {
+        font-size: 1.8rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="dashboard">
+    <h1 style="text-align:center;padding-top: 50px; padding-bottom: 30px;">⏰ Time Management</h1>
+    <div class="academic-stress-page">
+        <section class="stress-row"
+            style="display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, auto); gap: 2rem;">
+            <div class="stress-card">
+                <h3 class="card-title">📌 Common Time Issues</h3>
+                <ul>
+                    <li>Procrastination</li>
+                    <li>Overcommitting</li>
+                    <li>Distractions (phone, social media)</li>
+                    <li>Poor planning</li>
+                    <li>Last-minute cramming</li>
+                </ul>
+            </div>
+            <div class="stress-card">
+                <h3 class="card-title">🧠 Impact on Wellbeing</h3>
+                <ul>
+                    <li>Stress and anxiety</li>
+                    <li>Missed deadlines</li>
+                    <li>Low productivity</li>
+                    <li>Sleep deprivation</li>
+                </ul>
+            </div>
+            <div class="stress-card">
+                <h3 class="card-title">🛠️ Coping Strategies</h3>
+                <ul>
+                    <li>Use planners or digital calendars</li>
+                    <li>Set daily/weekly goals</li>
+                    <li>Prioritize important tasks</li>
+                    <li>Take regular breaks</li>
+                    <li>Limit distractions</li>
+                </ul>
+            </div>
+            <div class="stress-card-3">
+                <h3 class="card-title">🔗 Helpful Resources</h3>
+                <ul>
+                    <li><a href="https://todoist.com/" target="_blank">Todoist</a></li>
+                    <li><a href="https://www.notion.so/" target="_blank">Notion</a></li>
+                    <li><a href="https://pomofocus.io/" target="_blank">Pomofocus Timer</a></li>
+                    <li><a href="https://calendar.google.com/" target="_blank">Google Calendar</a></li>
+                    <li><a href="https://rescuetime.com/" target="_blank">RescueTime (Productivity Tracker)</a></li>
+                    <li><a href="https://habitica.com/" target="_blank">Habitica (Gamified Task Manager)</a></li>
+
+                </ul>
+            </div>
+            <div class="stress-card-4">
+                <h3 class="card-title">🎯 Time Management Tips</h3>
+                <ul>
+                    <li><strong>Pomodoro Technique:</strong> Work in focused sprints with short breaks.</li>
+                    <li><strong>Batch Tasks:</strong> Group similar tasks together to save time.</li>
+                    <li><strong>Set Boundaries:</strong> Learn to say no to non-essential commitments.</li>
+                    <li><strong>Reflect:</strong> Review your progress weekly and adjust plans.</li>
+                    <li><strong>Self-Care:</strong> Schedule downtime and rest.</li>
+                </ul>
+            </div>
+            <div class="stress-card-qd">
+                <h3 class="card-title">📋 Quick To-Do</h3>
+                <textarea placeholder="Write your top 3 tasks for today..." rows="4"></textarea>
+                <button onclick="alert('Tasks saved!')">Save</button>
+            </div>
+        </section>
+    </div>
+    <section class="widgets-row" style="margin-top: 2rem;">
+        <div class="stress-card-4" style="flex: 1 1 100%;">
+            <h3 class="widget-title">❓ Share Your Time Challenge</h3>
+            <textarea id="timeInput" placeholder="Describe your time management issue..." rows="5"></textarea>
+            <button onclick="giveTimeAdvice()">Get Advice</button>
+            <div id="timeAdvice" class="response-box"></div>
+        </div>
+    </section>
+    <section style="margin-top: 3rem;">
+        <h2 style="text-align:center; margin-bottom: 3.5rem;">🧩 Explore Common Student Stress Topics</h2>
+        <div class="explore-section">
+            <a class="explore-card" href="{{ url_for('academic') }}">📚Academic Stress</a>
+            <a class="explore-card" href="{{ url_for('financial') }}">💸Financial Stress</a>
+            <a class="explore-card" href="{{ url_for('career') }}">🧑‍💼Career Stress</a>
+            <a class="explore-card" href="{{ url_for('time') }}">⏰Time Management</a>
+            <a class="explore-card" href="{{ url_for('pmh') }}">🧘Physical & Mental Health</a>
+        </div>
+    </section>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function giveTimeAdvice() {
+        const input = document.getElementById('timeInput').value.toLowerCase().trim();
+        const responseBox = document.getElementById('timeAdvice');
+
+        if (!input) {
+            responseBox.textContent = "Please describe your challenge so we can help.";
+            return;
+        }
+
+        let advice = "";
+
+        if (input.includes('procrastinate') || input.includes('delay')) {
+            advice = "Try the Pomodoro Technique: 25 minutes focused work, 5 minutes break.";
+        } else if (input.includes('distraction') || input.includes('focus')) {
+            advice = "Turn off notifications and set a timer for focused work blocks.";
+        } else if (input.includes('overwhelm') || input.includes('too much')) {
+            advice = "Prioritize your top 3 tasks and break big projects into smaller steps.";
+        } else {
+            advice = "Plan your day ahead, set clear goals, and remember to take breaks!";
+        }
+
+        responseBox.textContent = advice;
+    }
+</script>
+{% endblock %}

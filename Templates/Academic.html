@@ -1,0 +1,433 @@
+{% extends 'base.html' %}
+
+{% block title %}MindPal - Academic Stress{% endblock %}
+
+{% block extra_head %}
+<style>
+/* Enhanced Academic Stress Page Styles */
+.academic-stress-page {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* Enhanced main heading */
+.dashboard h1 {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 3rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    animation: fadeInUp 0.8s ease-out;
+}
+
+/* Enhanced stress-row grid */
+.stress-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+    animation: fadeInUp 1s ease-out 0.2s both;
+}
+
+/* Enhanced stress cards */
+.stress-card, .stress-card-3, .stress-card-4, .stress-card-qd {
+    background: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 
+        0 8px 32px rgba(0,0,0,0.1),
+        0 2px 8px rgba(0,0,0,0.05);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    min-height: 280px;
+}
+
+/* Card glow effects */
+.stress-card::before, .stress-card-3::before, 
+.stress-card-4::before, .stress-card-qd::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #667eea, #764ba2, #5ec5a7);
+    border-radius: 20px 20px 0 0;
+}
+
+.stress-card:hover, .stress-card-3:hover, 
+.stress-card-4:hover, .stress-card-qd:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 
+        0 20px 40px rgba(0,0,0,0.15),
+        0 0 20px rgba(102, 126, 234, 0.3);
+    border-color: rgba(102, 126, 234, 0.4);
+}
+
+/* Enhanced card titles */
+.card-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: #333;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Enhanced lists */
+.stress-card ul, .stress-card-3 ul, 
+.stress-card-4 ul {
+    list-style: none;
+    padding: 0;
+}
+
+.stress-card li, .stress-card-3 li, 
+.stress-card-4 li {
+    padding: 0.7rem 0;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    position: relative;
+    padding-left: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.stress-card li::before, .stress-card-3 li::before, 
+.stress-card-4 li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: #5ec5a7;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.stress-card li:hover, .stress-card-3 li:hover, 
+.stress-card-4 li:hover {
+    padding-left: 2rem;
+    color: #667eea;
+}
+
+.stress-card li:last-child, .stress-card-3 li:last-child, 
+.stress-card-4 li:last-child {
+    border-bottom: none;
+}
+
+/* Enhanced links */
+.stress-card-3 a {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.stress-card-3 a:hover {
+    color: #764ba2;
+    text-decoration: underline;
+    text-decoration-color: #5ec5a7;
+}
+
+/* Enhanced textarea and buttons */
+.stress-card-qd textarea, #problemInput {
+    width: 100%;
+    padding: 1rem;
+    border: 2px solid rgba(102, 126, 234, 0.2);
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    resize: vertical;
+    background: rgba(255,255,255,0.8);
+    transition: all 0.3s ease;
+    margin-bottom: 1rem;
+}
+
+.stress-card-qd textarea:focus, #problemInput:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    background: rgba(255,255,255,0.95);
+}
+
+.stress-card-qd button, button {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: 25px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.stress-card-qd button:hover, button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
+
+/* Response box styling */
+.response-box {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: linear-gradient(135deg, rgba(94, 197, 167, 0.1), rgba(102, 126, 234, 0.1));
+    border-left: 4px solid #5ec5a7;
+    border-radius: 8px;
+    font-style: italic;
+    color: #333;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+/* Widget title styling */
+.widget-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: #333;
+    background: linear-gradient(135deg, #5ec5a7, #667eea);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Enhanced explore section */
+.explore-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+    animation: fadeInUp 1.2s ease-out 0.4s both;
+}
+
+.explore-card {
+    background: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 16px;
+    padding: 1.5rem;
+    text-decoration: none;
+    color: #333;
+    font-weight: 600;
+    text-align: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    position: relative;
+    overflow: hidden;
+}
+
+.explore-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #5ec5a7, #667eea);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+}
+
+.explore-card:hover::before {
+    transform: translateX(0);
+}
+
+.explore-card:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+    color: #667eea;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .academic-stress-page {
+        padding: 1rem;
+    }
+    
+    .dashboard h1 {
+        font-size: 2rem;
+        margin-bottom: 2rem;
+    }
+    
+    .stress-row {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .stress-card, .stress-card-3, .stress-card-4, .stress-card-qd {
+        padding: 1.5rem;
+        min-height: auto;
+    }
+    
+    .explore-section {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .stress-card, .stress-card-3, .stress-card-4, .stress-card-qd {
+        padding: 1rem;
+    }
+    
+    .card-title {
+        font-size: 1.1rem;
+    }
+    
+    .dashboard h1 {
+        font-size: 1.8rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<main class="dashboard">
+    <h1 style="text-align:center;padding-top: 50px; padding-bottom: 30px;">📚 Academic Stress in Students</h1>
+    <div class="academic-stress-page">
+        <!-- First Row -->
+        <section class="stress-row">
+            <div class="stress-card">
+                <h3 class="card-title">📌 Common Causes</h3>
+                <ul>
+                    <li>Exams & performance pressure</li>
+                    <li>Unrealistic expectations</li>
+                    <li>Fear of failure</li>
+                    <li>Time management issues</li>
+                    <li>Heavy workload</li>
+                </ul>
+            </div>
+
+            <div class="stress-card">
+                <h3 class="card-title">🧠 Effects on Wellbeing</h3>
+                <ul>
+                    <li>Anxiety, burnout</li>
+                    <li>Sleep issues</li>
+                    <li>Lack of motivation</li>
+                    <li>Low confidence</li>
+                </ul>
+            </div>
+
+            <div class="stress-card">
+                <h3 class="card-title">🛠️ Coping Tips</h3>
+                <ul>
+                    <li>Break study tasks into chunks</li>
+                    <li>Use planners or Pomodoro timers</li>
+                    <li>Practice deep breathing</li>
+                    <li>Talk to friends, mentors</li>
+                </ul>
+            </div>
+
+            <div class="stress-card-3">
+                <h3 class="card-title">🔗 Helpful Resources</h3>
+                <ul>
+                    <li><a href="https://www.khanacademy.org/" target="_blank">Khan Academy</a></li>
+                    <li><a href="https://www.notion.so/students" target="_blank">Notion for Students</a></li>
+                    <li><a href="https://pomofocus.io/" target="_blank">Pomofocus Timer</a></li>
+                    <li><a href="https://quizlet.com/" target="_blank">Quizlet (Study Tools)</a></li>
+                    <li><a href="https://www.coursera.org/" target="_blank">Coursera (Free Courses)</a></li>
+                    <li><a href="https://www.studysmarter.co.uk/" target="_blank">StudySmarter</a></li>
+                    <li><a href="https://www.calm.com/" target="_blank">Calm (Meditation)</a></li>
+                </ul>
+            </div>
+            <div class="stress-card-4">
+                <h3 class="card-title">🎯 Practical Solutions</h3>
+                <ul>
+                    <li><strong>Time-blocking:</strong> Assign fixed hours to study, breaks, and revision using a
+                        digital planner.</li>
+                    <li><strong>Smart Notes:</strong> Use the Cornell method or mind maps to summarize lessons
+                        efficiently.</li>
+                    <li><strong>Peer Study Groups:</strong> Join small, focused groups for shared learning and
+                        accountability.</li>
+                    <li><strong>Mock Tests:</strong> Take weekly mock exams to build confidence and reduce fear of
+                        real exams.</li>
+                    <li><strong>Ask for Help:</strong> Email teachers or attend tutorials to clarify difficult
+                        topics early.</li>
+                </ul>
+            </div>
+
+            <div class="stress-card-qd">
+                <h3 class="card-title">📋 Quick To-Do</h3>
+                <textarea placeholder="Write 3 academic goals for today..." rows="4"></textarea>
+                <button onclick="alert('Goals saved!')">Save</button>
+            </div>
+        </section>
+    </div>
+
+    <!-- New Interactive Problem & Advice Section -->
+    <section class="widgets-row" style="margin-top: 2rem;">
+        <div class="stress-card-4" style="flex: 1 1 100%;">
+            <h3 class="widget-title">❓ Tell Us Your Problem</h3>
+            <textarea id="problemInput" placeholder="Describe your academic stress or problem here..."
+                rows="5"></textarea>
+            <button onclick="giveAdvice()">Get Advice</button>
+            <div id="adviceResponse" class="response-box"></div>
+        </div>
+    </section>
+
+    <!-- Topic Switcher -->
+    <section style="margin-top: 3rem;">
+        <h2 style="text-align:center; margin-bottom: 3.5rem;">🧩 Explore Common Student Stress Topics</h2>
+        <div class="explore-section">
+            <a class="explore-card" href="{{ url_for('academic') }}">📚Academic Stress</a>
+            <a class="explore-card" href="{{ url_for('financial') }}">💸Financial Stress</a>
+            <a class="explore-card" href="{{ url_for('career') }}">🧑‍💼Career Stress</a>
+            <a class="explore-card" href="{{ url_for('time') }}">⏰Time Management</a>
+            <a class="explore-card" href="{{ url_for('pmh') }}">🧘Physical & Mental Health</a>
+
+        </div>
+    </section>
+</main>
+
+<script>
+    function giveAdvice() {
+        const input = document.getElementById('problemInput').value.toLowerCase().trim();
+        const responseBox = document.getElementById('adviceResponse');
+
+        if (!input) {
+            responseBox.textContent = "Please describe your problem so we can help you better.";
+            return;
+        }
+
+        let advice = "";
+
+        if (input.includes('exam') || input.includes('test') || input.includes('performance')) {
+            advice = "Try breaking your study into smaller sessions and use mock tests to build confidence.";
+        } else if (input.includes('time') || input.includes('manage') || input.includes('schedule')) {
+            advice = "Consider using time-blocking techniques and planners to organize your study time effectively.";
+        } else if (input.includes('motivation') || input.includes('focus') || input.includes('distraction')) {
+            advice = "Set small goals, take short breaks, and eliminate distractions while studying to improve focus.";
+        } else if (input.includes('stress') || input.includes('anxiety') || input.includes('burnout')) {
+            advice = "Practice deep breathing exercises, mindfulness, and talk to someone you trust about your feelings.";
+        } else if (input.includes('sleep') || input.includes('rest')) {
+            advice = "Ensure you get 7-8 hours of sleep daily and avoid studying right before bedtime.";
+        } else {
+            advice = "Remember to stay organized, take breaks, and ask for help when needed. You're not alone!";
+        }
+
+        responseBox.textContent = advice;
+    }
+</script>
+{% endblock %}

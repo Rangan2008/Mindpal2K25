@@ -1,0 +1,814 @@
+{% extends "base.html" %}
+
+{% block title %}MindPal - Your Stress Management Companion{% endblock %}
+
+{% block extra_head %}
+<style>
+/* Home page specific styles can be added here */
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section fade-in">
+  <div class="hero-content">
+    <div class="hero-text">
+      <h1 class="hero-title slide-up" style="padding-top: 50px; padding-bottom: 30px;">
+        Welcome to MindPal 
+        {% if username %}<span class="user-greeting">{{ username }}</span>{% endif %}
+      </h1>
+      <p class="hero-subtitle slide-up">
+        Your personalized digital sanctuary for stress relief and mental wellness.
+        Take control of your mental health journey with our comprehensive toolkit.
+      </p>
+      <div class="hero-actions slide-up">
+        <a href="{{ url_for('wellbeing') }}" class="btn btn-primary">
+          <i class="fas fa-heart" aria-hidden="true"></i>
+          Start Your Wellness Journey
+        </a>
+        <a href="{{ url_for('music') }}" class="btn btn-secondary">
+          <i class="fas fa-music" aria-hidden="true"></i>
+          Explore Music Therapy
+        </a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="breathing-exercise pulse">
+        <div class="breathing-circle">
+          <i class="fas fa-leaf"></i>
+          <p>Breathe</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features Overview -->
+<section class="features-section">
+  <div class="section-header text-center">
+    <h2 class="fade-in">Comprehensive Wellness Tools</h2>
+    <p class="fade-in">Discover a suite of features designed to support your mental health journey</p>
+  </div>
+  
+  <div class="card-grid">
+    <!-- Mood Tracking Card -->
+    <div class="feature-card slide-up">
+      <h3>Mood Tracking</h3>
+      <p>Monitor your emotional wellbeing with our intuitive mood tracking system. Identify patterns and triggers to better understand your mental health.</p>
+      <a href="#" class="btn btn-outline" onclick="startQuickMoodCheck(); return false;">
+        Track Your Mood
+      </a>
+    </div>
+
+    <!-- Music Therapy Card -->
+    <div class="feature-card slide-up">
+      <h3>Music Therapy</h3>
+      <p>Relax and destress with our curated collection of calming music and guided meditation tracks designed for student wellness.</p>
+      <a href="{{ url_for('music') }}" class="btn btn-outline">
+        Explore Music
+      </a>
+    </div>
+
+    <!-- Study Tips Card -->
+    <div class="feature-card slide-up">
+      <h3>Study Tips</h3>
+      <p>Master effective study techniques and time management strategies to reduce academic stress and improve performance.</p>
+      <a href="{{ url_for('studytips') }}" class="btn btn-outline">
+        Get Study Tips
+      </a>
+    </div>
+
+    <!-- Goal Setting Card -->
+    <div class="feature-card slide-up">
+      <h3>Goal Setting</h3>
+      <p>Set and track personal goals to stay motivated and focused on your academic and personal growth journey.</p>
+      <a href="{{ url_for('goals') }}" class="btn btn-outline">
+        Set Goals
+      </a>
+    </div>
+
+    <!-- Emergency Support Card -->
+    <div class="feature-card slide-up">
+      <h3>Emergency Support</h3>
+      <p>Access immediate help and crisis resources when you need them most. Your safety and wellbeing are our priority.</p>
+      <a href="{{ url_for('emergency') }}" class="btn btn-outline">
+        Get Help Now
+      </a>
+    </div>
+
+    <!-- Wellness Dashboard Card -->
+    <div class="feature-card slide-up">
+      <h3>Wellness Dashboard</h3>
+      <p>Get a comprehensive overview of your mental health progress with personalized insights and recommendations.</p>
+      <a href="{{ url_for('wellbeing') }}" class="btn btn-outline">
+        View Dashboard
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Quick Start Section -->
+<section class="quick-start-section">
+  <div class="card">
+    <div class="quick-start-content">
+      <div class="quick-start-text">
+        <h3>Ready to Begin Your Wellness Journey?</h3>
+        <p>Start with a quick mood check-in to understand how you're feeling today, then explore our personalized recommendations.</p>
+        <div class="quick-actions">
+          <button class="btn btn-primary" onclick="startQuickMoodCheck()">
+            <i class="fas fa-smile" aria-hidden="true"></i>
+            Quick Mood Check
+          </button>
+          <button class="btn btn-secondary" onclick="startBreathingExercise()">
+            <i class="fas fa-wind" aria-hidden="true"></i>
+            Breathing Exercise
+          </button>
+        </div>
+      </div>
+      <div class="progress-overview">
+        <h4>Your Progress</h4>
+        <div class="progress-item">
+          <span>Wellness Score</span>
+          <div class="progress-container">
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: 75%"></div>
+            </div>
+            <span class="progress-text">75%</span>
+          </div>
+        </div>
+        <div class="progress-item">
+          <span>Daily Goals</span>
+          <div class="progress-container">
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: 60%"></div>
+            </div>
+            <span class="progress-text">3/5</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Mindfulness Section -->
+<section class="mindfulness-section">
+  <div class="section-header text-center">
+    <h2 class="fade-in">Take a Moment to Breathe</h2>
+    <p class="fade-in">Practice mindfulness with our guided breathing exercises</p>
+  </div>
+  
+  <div class="mindfulness-container">
+    <div class="breathing-guide card">
+      <h3>4-7-8 Breathing Technique</h3>
+      <p>A simple yet effective technique to reduce stress and promote relaxation</p>
+      <div class="breathing-instructions">
+        <div class="instruction-step">
+          <div class="step-number">1</div>
+          <div class="step-text">
+            <strong>Inhale</strong> for 4 seconds
+          </div>
+        </div>
+        <div class="instruction-step">
+          <div class="step-number">2</div>
+          <div class="step-text">
+            <strong>Hold</strong> for 7 seconds
+          </div>
+        </div>
+        <div class="instruction-step">
+          <div class="step-number">3</div>
+          <div class="step-text">
+            <strong>Exhale</strong> for 8 seconds
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="startBreathingExercise()">
+        Start Guided Session
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Modal for Quick Mood Check -->
+<div class="modal-overlay" id="mood-check-modal">
+  <div class="modal">
+    <h3>How are you feeling today?</h3>
+    <div class="mood-options">
+      <button class="mood-btn" data-mood="excellent">
+        <i class="fas fa-grin-stars"></i>
+        <span>Excellent</span>
+      </button>
+      <button class="mood-btn" data-mood="good">
+        <i class="fas fa-smile"></i>
+        <span>Good</span>
+      </button>
+      <button class="mood-btn" data-mood="okay">
+        <i class="fas fa-meh"></i>
+        <span>Okay</span>
+      </button>
+      <button class="mood-btn" data-mood="struggling">
+        <i class="fas fa-frown"></i>
+        <span>Struggling</span>
+      </button>
+      <button class="mood-btn" data-mood="overwhelmed">
+        <i class="fas fa-tired"></i>
+        <span>Overwhelmed</span>
+      </button>
+    </div>
+    <button class="btn btn-outline" onclick="closeMoodCheck()">
+      Maybe Later
+    </button>
+  </div>
+</div>
+
+<!-- Breathing Exercise Modal -->
+<div class="modal-overlay" id="breathing-modal">
+  <div class="modal">
+    <h3>Guided Breathing Exercise</h3>
+    <div class="breathing-animation">
+      <div class="breathing-circle-large" id="breathing-circle">
+        <span id="breathing-text">Breathe</span>
+      </div>
+    </div>
+    <div class="breathing-controls">
+      <button class="btn btn-primary" id="start-breathing">Start</button>
+      <button class="btn btn-outline" id="stop-breathing">Stop</button>
+      <button class="btn btn-outline" onclick="closeBreathingExercise()">Close</button>
+    </div>
+  </div>
+</div>
+
+<style>
+/* Hero Section Styles */
+.hero-section {
+  padding: 4rem 0;
+  margin-bottom: 4rem;
+}
+
+.hero-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+.hero-title {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.user-greeting {
+  display: block;
+  font-size: 2rem;
+  color: var(--accent-teal);
+}
+
+.hero-subtitle {
+  font-size: 1.2rem;
+  opacity: 0.8;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.hero-visual {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Features Section */
+.features-section {
+  margin: 4rem 0;
+}
+
+.section-header {
+  margin-bottom: 3rem;
+}
+
+.section-header h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.section-header p {
+  font-size: 1.1rem;
+  opacity: 0.8;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Card Grid Styles */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.feature-card {
+  background: #ffffff;
+  border-radius: var(--radius-large);
+  padding: 2rem;
+  text-align: center;
+  transition: var(--transition-medium);
+  border: 1px solid var(--light-gray);
+  box-shadow: var(--shadow-soft);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 320px;
+}
+
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: var(--gradient-primary);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+  transform-origin: left;
+}
+
+.feature-card:hover::before {
+  transform: scaleX(1);
+}
+
+.feature-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-elevated);
+  border-color: var(--primary-blue);
+}
+
+.feature-card .icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 1.5rem;
+  background: var(--gradient-primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-medium);
+}
+
+.feature-card .icon i {
+  font-size: 2rem;
+  color: white;
+}
+
+.feature-card:hover .icon {
+  transform: scale(1.1);
+}
+
+.feature-card h3 {
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+  color: var(--primary-blue);
+  font-weight: var(--font-weight-semibold);
+}
+
+.feature-card p {
+  flex-grow: 1;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+  opacity: 0.8;
+  font-size: 0.95rem;
+}
+
+.feature-card .btn {
+  margin-top: auto;
+  align-self: center;
+  min-width: 150px;
+}
+
+/* Quick Start Section */
+.quick-start-section {
+  margin: 4rem 0;
+}
+
+.quick-start-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: center;
+}
+
+.quick-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.progress-overview h4 {
+  margin-bottom: 1.5rem;
+  color: var(--primary-blue);
+}
+
+.progress-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.progress-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+  max-width: 200px;
+}
+
+.progress-text {
+  font-weight: var(--font-weight-medium);
+  color: var(--primary-blue);
+  min-width: 40px;
+}
+
+/* Mindfulness Section */
+.mindfulness-section {
+  margin: 4rem 0;
+}
+
+.mindfulness-container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.breathing-guide {
+  text-align: center;
+}
+
+.breathing-instructions {
+  display: flex;
+  justify-content: space-around;
+  margin: 2rem 0;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.instruction-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.step-number {
+  width: 40px;
+  height: 40px;
+  background: var(--gradient-primary);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--font-weight-bold);
+}
+
+.step-text {
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+/* Modal Enhancements */
+.mood-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.mood-btn {
+  background: none;
+  border: 2px solid var(--medium-gray);
+  border-radius: var(--radius-medium);
+  padding: 1rem;
+  cursor: pointer;
+  transition: var(--transition-medium);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: inherit;
+}
+
+.mood-btn:hover {
+  border-color: var(--primary-blue);
+  background: rgba(74, 144, 226, 0.1);
+}
+
+.mood-btn i {
+  font-size: 2rem;
+}
+
+.breathing-animation {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 2rem 0;
+}
+
+.breathing-circle-large {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: var(--gradient-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.2rem;
+  font-weight: var(--font-weight-medium);
+  transition: transform 4s ease-in-out;
+}
+
+.breathing-controls {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Explore Section Styles */
+.explore-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  padding: 2rem 0;
+  margin: 2rem 0;
+}
+
+.explore-card {
+  background: #ffffff;
+  border-radius: var(--radius-large);
+  padding: 2rem;
+  text-decoration: none;
+  color: inherit;
+  transition: var(--transition-medium);
+  border: 1px solid var(--light-gray);
+  box-shadow: var(--shadow-soft);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 150px;
+}
+
+.explore-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: var(--gradient-primary);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+  transform-origin: left;
+}
+
+.explore-card:hover::before {
+  transform: scaleX(1);
+}
+
+.explore-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-elevated);
+  border-color: var(--primary-blue);
+}
+
+.explore-card h4 {
+  margin: 0 0 1rem 0;
+  color: var(--primary-blue);
+  font-size: 1.3rem;
+  font-weight: var(--font-weight-semibold);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.explore-card p {
+  margin: 0;
+  opacity: 0.8;
+  line-height: 1.5;
+  font-size: 0.95rem;
+}
+
+/* Mobile optimizations */
+.mobile-card {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.mobile-hover:active {
+  transform: translateY(-2px) scale(0.98);
+}
+
+.gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.responsive-text {
+  font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+}
+
+.mobile-small-text {
+  font-size: clamp(0.85rem, 2vw, 0.95rem);
+}
+
+.elastic-scroll {
+  scroll-behavior: smooth;
+  overscroll-behavior: contain;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .hero-content {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    text-align: center;
+  }
+  
+  .hero-title {
+    font-size: 2rem;
+  }
+  
+  .user-greeting {
+    font-size: 1.5rem;
+  }
+  
+  .quick-start-content {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  .breathing-instructions {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .mood-options {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .hero-actions,
+  .quick-actions,
+  .breathing-controls {
+    justify-content: center;
+  }
+  
+  .explore-section {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 1rem 0;
+  }
+  
+  .explore-card {
+    padding: 1.5rem;
+    min-height: 120px;
+  }
+}
+</style>
+
+<script>
+// Quick Mood Check
+function startQuickMoodCheck() {
+  document.getElementById('mood-check-modal').classList.add('active');
+}
+
+function closeMoodCheck() {
+  document.getElementById('mood-check-modal').classList.remove('active');
+}
+
+// Breathing Exercise
+function startBreathingExercise() {
+  document.getElementById('breathing-modal').classList.add('active');
+}
+
+function closeBreathingExercise() {
+  document.getElementById('breathing-modal').classList.remove('active');
+  stopBreathingAnimation();
+}
+
+let breathingInterval;
+let breathingActive = false;
+
+function startGuidedBreathing() {
+  const circle = document.getElementById('breathing-circle');
+  const text = document.getElementById('breathing-text');
+  
+  if (breathingActive) return;
+  
+  breathingActive = true;
+  let phase = 0; // 0: inhale, 1: hold, 2: exhale
+  
+  breathingInterval = setInterval(() => {
+    switch(phase) {
+      case 0: // Inhale
+        circle.style.transform = 'scale(1.3)';
+        text.textContent = 'Inhale...';
+        setTimeout(() => { phase = 1; }, 4000);
+        break;
+      case 1: // Hold
+        text.textContent = 'Hold...';
+        setTimeout(() => { phase = 2; }, 7000);
+        break;
+      case 2: // Exhale
+        circle.style.transform = 'scale(1)';
+        text.textContent = 'Exhale...';
+        setTimeout(() => { phase = 0; }, 8000);
+        break;
+    }
+  }, 19000); // Total cycle: 4+7+8 = 19 seconds
+  
+  // Start first cycle immediately
+  circle.style.transform = 'scale(1.3)';
+  text.textContent = 'Inhale...';
+  setTimeout(() => { text.textContent = 'Hold...'; }, 4000);
+  setTimeout(() => { 
+    circle.style.transform = 'scale(1)';
+    text.textContent = 'Exhale...';
+  }, 11000);
+}
+
+function stopBreathingAnimation() {
+  if (breathingInterval) {
+    clearInterval(breathingInterval);
+    breathingInterval = null;
+  }
+  breathingActive = false;
+  
+  const circle = document.getElementById('breathing-circle');
+  const text = document.getElementById('breathing-text');
+  
+  if (circle && text) {
+    circle.style.transform = 'scale(1)';
+    text.textContent = 'Breathe';
+  }
+}
+
+// Event listeners
+document.addEventListener('DOMContentLoaded', function() {
+  // Mood selection
+  document.querySelectorAll('.mood-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const mood = this.dataset.mood;
+      showNotification(`Mood recorded: ${mood}. Keep taking care of yourself! 💙`, 'success');
+      closeMoodCheck();
+    });
+  });
+  
+  // Breathing controls
+  document.getElementById('start-breathing').addEventListener('click', startGuidedBreathing);
+  document.getElementById('stop-breathing').addEventListener('click', stopBreathingAnimation);
+  
+  // Close modals when clicking outside
+  document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', function(e) {
+      if (e.target === this) {
+        this.classList.remove('active');
+        if (this.id === 'breathing-modal') {
+          stopBreathingAnimation();
+        }
+      }
+    });
+  });
+});
+</script>
+
+  <div class="explore-section elastic-scroll">
+    <a href="{{ url_for('music') }}" class="explore-card mobile-card mobile-hover gpu-accelerated" target="_blank">
+      <h4 class="responsive-text">🎧 Music Therapy</h4>
+      <p class="mobile-small-text">Relax and focus with curated playlists.</p>
+    </a>
+
+    <a href="{{ url_for('studytips') }}" class="explore-card mobile-card mobile-hover gpu-accelerated" target="_blank">
+      <h4 class="responsive-text">📘 Study Help</h4>
+      <p class="mobile-small-text">Get tips and tricks for effective studying.</p>
+    </a>
+
+    <a href="{{ url_for('chat_page') }}" class="explore-card mobile-card mobile-hover gpu-accelerated">
+      <h4 class="responsive-text">🤖 Talk to MindPal</h4>
+      <p class="mobile-small-text">Chat with your AI mental wellness companion.</p>
+    </a>
+  </div>
+</div>
+{% endblock %}

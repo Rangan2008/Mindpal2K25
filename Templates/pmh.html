@@ -1,0 +1,417 @@
+{% extends 'base.html' %}
+
+{% block title %}MindPal - Physical & Mental Health{% endblock %}
+
+{% block extra_head %}
+<style>
+/* Enhanced Physical & Mental Health Page Styles */
+.academic-stress-page {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* Enhanced main heading with health theme */
+.dashboard h1 {
+    background: linear-gradient(135deg, #27ae60 0%, #2ecc71 50%, #16a085 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 3rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    animation: fadeInUp 0.8s ease-out;
+}
+
+/* Enhanced stress-row grid */
+.stress-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+    animation: fadeInUp 1s ease-out 0.2s both;
+}
+
+/* Enhanced stress cards with health theme */
+.stress-card, .stress-card-3, .stress-card-4, .stress-card-qd, .stress-card-sfh {
+    background: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
+    border: 1px solid rgba(39, 174, 96, 0.2);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 
+        0 8px 32px rgba(39, 174, 96, 0.15),
+        0 2px 8px rgba(0,0,0,0.05);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    min-height: 280px;
+}
+
+/* Card glow effects with health colors */
+.stress-card::before, .stress-card-3::before, 
+.stress-card-4::before, .stress-card-qd::before, .stress-card-sfh::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #27ae60, #2ecc71, #16a085);
+    border-radius: 20px 20px 0 0;
+}
+
+.stress-card:hover, .stress-card-3:hover, 
+.stress-card-4:hover, .stress-card-qd:hover, .stress-card-sfh:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 
+        0 20px 40px rgba(39, 174, 96, 0.25),
+        0 0 20px rgba(46, 204, 113, 0.4);
+    border-color: rgba(39, 174, 96, 0.4);
+}
+
+/* Enhanced card titles with health gradient */
+.card-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: #333;
+    background: linear-gradient(135deg, #27ae60, #16a085);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Enhanced lists */
+.stress-card ul, .stress-card-3 ul, 
+.stress-card-4 ul, .stress-card-sfh ul {
+    list-style: none;
+    padding: 0;
+}
+
+.stress-card li, .stress-card-3 li, 
+.stress-card-4 li, .stress-card-sfh li {
+    padding: 0.7rem 0;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    position: relative;
+    padding-left: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.stress-card li::before, .stress-card-3 li::before, 
+.stress-card-4 li::before, .stress-card-sfh li::before {
+    content: '🌱';
+    position: absolute;
+    left: 0;
+    font-size: 0.9rem;
+}
+
+.stress-card li:hover, .stress-card-3 li:hover, 
+.stress-card-4 li:hover, .stress-card-sfh li:hover {
+    padding-left: 2rem;
+    color: #2ecc71;
+}
+
+.stress-card li:last-child, .stress-card-3 li:last-child, 
+.stress-card-4 li:last-child, .stress-card-sfh li:last-child {
+    border-bottom: none;
+}
+
+/* Enhanced links */
+.stress-card-3 a, .stress-card-sfh a {
+    color: #2ecc71;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.stress-card-3 a:hover, .stress-card-sfh a:hover {
+    color: #16a085;
+    text-decoration: underline;
+    text-decoration-color: #27ae60;
+}
+
+/* Enhanced textarea and buttons */
+.stress-card-qd textarea, #problemInput {
+    width: 100%;
+    padding: 1rem;
+    border: 2px solid rgba(39, 174, 96, 0.3);
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    resize: vertical;
+    background: rgba(255,255,255,0.8);
+    transition: all 0.3s ease;
+    margin-bottom: 1rem;
+}
+
+.stress-card-qd textarea:focus, #problemInput:focus {
+    outline: none;
+    border-color: #2ecc71;
+    box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.1);
+    background: rgba(255,255,255,0.95);
+}
+
+.stress-card-qd button, button {
+    background: linear-gradient(135deg, #27ae60 0%, #16a085 100%);
+    color: white;
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: 25px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+}
+
+.stress-card-qd button:hover, button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(39, 174, 96, 0.4);
+    background: linear-gradient(135deg, #16a085 0%, #27ae60 100%);
+}
+
+/* Response box styling */
+.response-box {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: linear-gradient(135deg, rgba(39, 174, 96, 0.1), rgba(22, 160, 133, 0.1));
+    border-left: 4px solid #27ae60;
+    border-radius: 8px;
+    font-style: italic;
+    color: #333;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+/* Widget title styling */
+.widget-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: #333;
+    background: linear-gradient(135deg, #27ae60, #16a085);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Enhanced explore section */
+.explore-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+    animation: fadeInUp 1.2s ease-out 0.4s both;
+}
+
+.explore-card {
+    background: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
+    border: 1px solid rgba(39, 174, 96, 0.2);
+    border-radius: 16px;
+    padding: 1.5rem;
+    text-decoration: none;
+    color: #333;
+    font-weight: 600;
+    text-align: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(39, 174, 96, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.explore-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #27ae60, #16a085);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+}
+
+.explore-card:hover::before {
+    transform: translateX(0);
+}
+
+.explore-card:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 12px 30px rgba(39, 174, 96, 0.2);
+    color: #2ecc71;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .academic-stress-page {
+        padding: 1rem;
+    }
+    
+    .dashboard h1 {
+        font-size: 2rem;
+        margin-bottom: 2rem;
+    }
+    
+    .stress-row {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .stress-card, .stress-card-3, .stress-card-4, .stress-card-qd, .stress-card-sfh {
+        padding: 1.5rem;
+        min-height: auto;
+    }
+    
+    .explore-section {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .stress-card, .stress-card-3, .stress-card-4, .stress-card-qd, .stress-card-sfh {
+        padding: 1rem;
+    }
+    
+    .card-title {
+        font-size: 1.1rem;
+    }
+    
+    .dashboard h1 {
+        font-size: 1.8rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="dashboard">
+  <h1 style="text-align:center; padding-top: 50px; padding-bottom: 30px;">🧘‍♀️ Physical & Mental Health</h1>
+  <div class="academic-stress-page">
+    <section class="stress-row"
+      style="display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, auto); gap: 2rem;">
+      <div class="stress-card">
+        <h3 class="card-title">🏋️ Common Physical Issues</h3>
+        <ul>
+          <li>Fatigue due to lack of sleep</li>
+          <li>Back pain from prolonged sitting</li>
+          <li>Skipping meals or poor diet</li>
+          <li>Inactivity/lack of exercise</li>
+          <li>Screen time fatigue</li>
+        </ul>
+      </div>
+      <div class="stress-card">
+        <h3 class="card-title">🧠 Common Mental Health Issues</h3>
+        <ul>
+          <li>Anxiety or panic attacks</li>
+          <li>Feeling overwhelmed or isolated</li>
+          <li>Burnout and exhaustion</li>
+          <li>Lack of motivation</li>
+          <li>Imposter syndrome</li>
+        </ul>
+      </div>
+      <div class="stress-card">
+        <h3 class="card-title">🛠️ Self-Care Tips</h3>
+        <ul>
+          <li>Establish a sleep schedule</li>
+          <li>Hydrate and eat balanced meals</li>
+          <li>Take short walks or stretch breaks</li>
+          <li>Meditate or journal daily</li>
+          <li>Unplug from screens at night</li>
+        </ul>
+      </div>
+      <div class="stress-card-3">
+        <h3 class="card-title">🔗 Helpful Resources</h3>
+        <ul>
+          <li><a href="https://www.headspace.com/" target="_blank">Headspace</a></li>
+          <li><a href="https://www.myfitnesspal.com/" target="_blank">MyFitnessPal</a></li>
+          <li><a href="https://www.nimh.nih.gov/" target="_blank">Mental Health Resources</a></li>
+          <li><a href="https://www.calm.com/" target="_blank">Calm (Mindfulness & Sleep)</a></li>
+          <li><a href="https://www.betterhelp.com/" target="_blank">BetterHelp (Online Therapy)</a></li>
+          <li><a href="https://www.nutrition.org.uk/" target="_blank">British Nutrition Foundation</a></li>
+          <li><a href="https://www.sleepfoundation.org/" target="_blank">Sleep Foundation</a></li>
+        </ul>
+      </div>
+      <div class="stress-card-sfh">
+        <h3 class="card-title">💡 Healthy Habits</h3>
+        <ul>
+          <li><strong>Routine:</strong> Stick to consistent wake/sleep times</li>
+          <li><strong>Movement:</strong> Stretch every hour or walk 30 mins/day</li>
+          <li><strong>Nutrition:</strong> Eat fruits, veggies, and whole grains</li>
+          <li><strong>Rest:</strong> Allow time to relax without guilt</li>
+          <li><strong>Support:</strong> Talk to friends or a counselor</li>
+        </ul>
+      </div>
+      <div class="stress-card-qd">
+        <h3 class="card-title">📋 Health Check-In</h3>
+        <textarea placeholder="Write how you feel physically and mentally today..." rows="4"></textarea>
+        <button onclick="alert('Check-in saved!')">Save</button>
+      </div>
+    </section>
+  </div>
+  <section class="widgets-row" style="margin-top: 2rem;">
+    <div class="stress-card-4" style="flex: 1 1 100%;">
+      <h3 class="widget-title">❓ Share a Health Concern</h3>
+      <textarea id="healthInput" placeholder="What’s troubling you health-wise?" rows="5"></textarea>
+      <button onclick="giveHealthAdvice()">Get Advice</button>
+      <div id="healthResponse" class="response-box"></div>
+    </div>
+  </section>
+  <section style="margin-top: 3rem;">
+    <h2 style="text-align:center; margin-bottom: 3.5rem;">🧩 Explore Common Student Stress Topics</h2>
+    <div class="explore-section">
+      <a class="explore-card" href="{{ url_for('academic') }}">📚Academic Stress</a>
+      <a class="explore-card" href="{{ url_for('financial') }}">💸Financial Stress</a>
+      <a class="explore-card" href="{{ url_for('career') }}">🧑‍💼Career Stress</a>
+      <a class="explore-card" href="{{ url_for('time') }}">⏰Time Management</a>
+      <a class="explore-card" href="{{ url_for('pmh') }}">🧘Physical & Mental Health</a>
+    </div>
+  </section>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  function giveHealthAdvice() {
+    const input = document.getElementById('healthInput').value.toLowerCase().trim();
+    const responseBox = document.getElementById('healthResponse');
+
+    if (!input) {
+      responseBox.textContent = "Please describe your concern so we can offer advice.";
+      return;
+    }
+
+    let advice = "";
+
+    if (input.includes('sleep') || input.includes('tired')) {
+      advice = "Try to maintain a consistent bedtime and avoid screens an hour before bed.";
+    } else if (input.includes('stress') || input.includes('anxiety')) {
+      advice = "Practice mindfulness, journaling, or short meditations. Also, consider speaking with a counselor.";
+    } else if (input.includes('diet') || input.includes('food') || input.includes('meal')) {
+      advice = "Plan simple, nutritious meals ahead of time and don’t skip meals during study sessions.";
+    } else if (input.includes('exercise') || input.includes('inactive')) {
+      advice = "Incorporate 20-30 minutes of walking, stretching, or home workouts into your day.";
+    } else {
+      advice = "Take time to listen to your body, rest when needed, and don’t hesitate to ask for help.";
+    }
+
+    responseBox.textContent = advice;
+  }
+</script>
+{% endblock %}

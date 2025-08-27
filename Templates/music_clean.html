@@ -1,0 +1,1031 @@
+{% extends 'base.html' %}
+
+{% block title %}MindPal - Music Therapy{% endblock %}
+
+{% block extra_head %}
+<!-- YouTube API -->
+<script src="https://www.youtube.com/iframe_api"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+/* Modern Music Therapy Page Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    min-height: 100vh;
+    color: #333;
+}
+
+.music-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* Hero Section */
+.hero-section {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 3rem;
+    padding: 3rem 4rem;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    margin-bottom: 3rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    min-height: 200px;
+}
+
+.hero-title {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 1rem;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    text-align: left;
+}
+
+.hero-subtitle {
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 0;
+    text-align: left;
+}
+
+.hero-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-right: 2rem;
+}
+
+.daily-quote {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 15px;
+    padding: 2rem;
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    flex-shrink: 0;
+    width: 400px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+/* Mood Selector */
+.mood-selector {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 2.5rem;
+    margin-bottom: 3rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.mood-title {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 1rem;
+}
+
+.mood-subtitle {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 2rem;
+}
+
+.mood-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.mood-card {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: #333;
+    border: 2px solid transparent;
+}
+
+.mood-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.mood-card.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.mood-emoji {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.mood-name {
+    font-weight: 600;
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.mood-description {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+/* Music Player */
+.music-player {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 3rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    display: none;
+}
+
+.player-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.player-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+}
+
+.player-info h3 {
+    margin: 0;
+    color: #333;
+    font-weight: 600;
+}
+
+.player-info p {
+    margin: 0;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.player-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+.control-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: none;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.control-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.control-btn.play {
+    width: 70px;
+    height: 70px;
+    font-size: 1.5rem;
+}
+
+.control-btn.active {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+}
+
+/* Content Section */
+.content-section {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 2.5rem;
+    margin-bottom: 3rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.section-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.section-subtitle {
+    color: #666;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+/* Playlist Grid */
+.playlist-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.playlist-card {
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 15px;
+    padding: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+}
+
+.playlist-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.playlist-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.playlist-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.playlist-title {
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+.playlist-description {
+    color: #666;
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+}
+
+.playlist-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.btn-secondary {
+    background: rgba(102, 126, 234, 0.1);
+    color: #667eea;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Audio Player */
+.audio-section {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.audio-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+}
+
+.audio-item {
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 10px;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.audio-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.audio-info {
+    flex: 1;
+}
+
+.audio-title {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.25rem;
+}
+
+.audio-description {
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.audio-controls {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.audio-btn {
+    width: 35px;
+    height: 35px;
+    border: none;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.audio-btn:hover {
+    transform: scale(1.1);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .hero-section {
+        gap: 2rem;
+        padding: 2.5rem 3rem;
+    }
+    
+    .daily-quote {
+        width: 300px;
+        padding: 1.5rem;
+        font-size: 1rem;
+    }
+    
+    .hero-content {
+        padding-right: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .music-container {
+        padding: 1rem;
+    }
+    
+    .hero-section {
+        flex-direction: column;
+        text-align: center;
+        gap: 1.5rem;
+        padding: 2rem;
+        min-height: auto;
+    }
+    
+    .hero-content {
+        order: 1;
+        padding-right: 0;
+    }
+    
+    .daily-quote {
+        order: 2;
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    .hero-title {
+        font-size: 2rem;
+        text-align: center;
+    }
+    
+    .hero-subtitle {
+        text-align: center;
+    }
+    
+    .mood-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+    
+    .playlist-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .audio-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="music-container">
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">🎵 Music Therapy Hub</h1>
+            <p class="hero-subtitle">Discover curated playlists and healing sounds for every mood</p>
+        </div>
+        <div id="daily-quote" class="daily-quote">
+            "Music can heal the wounds that words cannot touch."
+        </div>
+    </section>
+
+    <!-- Music Player -->
+    <section class="music-player" id="musicPlayer">
+        <div class="player-header">
+            <div class="player-avatar">
+                <i class="fas fa-music"></i>
+            </div>
+            <div class="player-info">
+                <h3 id="currentSong">Select a playlist to start</h3>
+                <p id="currentArtist">Choose your mood below</p>
+            </div>
+        </div>
+        
+        <div class="player-controls">
+            <button class="control-btn" id="prevBtn">
+                <i class="fas fa-step-backward"></i>
+            </button>
+            <button class="control-btn play" id="playBtn">
+                <i class="fas fa-play"></i>
+            </button>
+            <button class="control-btn" id="nextBtn">
+                <i class="fas fa-step-forward"></i>
+            </button>
+            <button class="control-btn" id="shuffleBtn">
+                <i class="fas fa-random"></i>
+            </button>
+        </div>
+    </section>
+
+    <!-- Mood Selector -->
+    <section class="mood-selector">
+        <h2 class="mood-title">🎭 How are you feeling today?</h2>
+        <p class="mood-subtitle">Select your current mood to get personalized music recommendations</p>
+        
+        <div class="mood-grid">
+            <div class="mood-card" data-mood="happy">
+                <span class="mood-emoji">😊</span>
+                <div class="mood-name">Happy</div>
+                <div class="mood-description">Upbeat & Energizing</div>
+            </div>
+            
+            <div class="mood-card" data-mood="stressed">
+                <span class="mood-emoji">😰</span>
+                <div class="mood-name">Stressed</div>
+                <div class="mood-description">Calming & Relaxing</div>
+            </div>
+            
+            <div class="mood-card" data-mood="sad">
+                <span class="mood-emoji">😢</span>
+                <div class="mood-name">Sad</div>
+                <div class="mood-description">Comforting & Healing</div>
+            </div>
+            
+            <div class="mood-card" data-mood="tired">
+                <span class="mood-emoji">😴</span>
+                <div class="mood-name">Tired</div>
+                <div class="mood-description">Peaceful & Restorative</div>
+            </div>
+            
+            <div class="mood-card" data-mood="focused">
+                <span class="mood-emoji">🎯</span>
+                <div class="mood-name">Focused</div>
+                <div class="mood-description">Concentration & Study</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Content Section -->
+    <section class="content-section" id="contentSection" style="display: none;">
+        <h2 class="section-title" id="moodTitle">Select a mood to see playlists</h2>
+        <p class="section-subtitle" id="moodSubtitle">Choose your current emotional state above</p>
+        
+        <!-- YouTube Playlists -->
+        <div class="playlist-grid" id="playlistGrid"></div>
+        
+        <!-- Local Audio Files -->
+        <div class="audio-section" id="audioSection">
+            <h3 style="color: #333; margin-bottom: 1rem;">🎧 Local Audio Collection</h3>
+            <div class="audio-grid" id="audioGrid"></div>
+        </div>
+    </section>
+</main>
+
+<!-- Hidden YouTube Player -->
+<div id="youtube-player" style="display: none;"></div>
+
+<script>
+// Global variables
+let currentPlayer = null;
+let currentAudio = null;
+let currentMood = null;
+let MOOD_CONFIG = {};
+
+// Initialize the app
+document.addEventListener('DOMContentLoaded', function() {
+    initializeApp();
+});
+
+function initializeApp() {
+    fetchDailyQuote();
+    fetchMoodConfig();
+    setupEventListeners();
+    loadYouTubeAPI();
+}
+
+function fetchDailyQuote() {
+    const quoteEl = document.getElementById('daily-quote');
+    
+    fetch('https://api.quotable.io/random?tags=motivational|inspirational')
+        .then(res => res.json())
+        .then(data => {
+            quoteEl.textContent = `"${data.content}" — ${data.author}`;
+        })
+        .catch(() => {
+            const quotes = [
+                "Music can heal the wounds that words cannot touch.",
+                "Where words fail, music speaks.",
+                "Music is therapy for the soul.",
+                "Life is a song - sing it with passion.",
+                "Music is the universal language of mankind."
+            ];
+            quoteEl.textContent = quotes[Math.floor(Math.random() * quotes.length)];
+        });
+}
+
+function fetchMoodConfig() {
+    fetch('/api/mood-config')
+        .then(response => response.json())
+        .then(data => {
+            MOOD_CONFIG = data;
+            console.log('Mood config loaded successfully');
+        })
+        .catch(error => {
+            console.error('Failed to load mood config:', error);
+            // Fallback to local config if API fails
+            loadFallbackMoodConfig();
+        });
+}
+
+function loadFallbackMoodConfig() {
+    MOOD_CONFIG = {
+        happy: {
+            title: '😊 Happy & Upbeat',
+            subtitle: 'Feel-good music to boost your positive energy and motivation!',
+            playlists: [
+                {
+                    name: '🎵 Happy Vibes Collection',
+                    description: 'Upbeat songs to brighten your day',
+                    url: 'https://www.youtube.com/playlist?list=PLGtD-HOt3wYA8CK0pQB98y-0MD84KDago',
+                    embed: 'PLGtD-HOt3wYA8CK0pQB98y-0MD84KDago'
+                },
+                {
+                    name: '🌟 Feel Good Hits',
+                    description: 'Classic feel-good tracks from various decades',
+                    url: 'https://www.youtube.com/playlist?list=PLm8013_gmOkhPPLyfnk1P7_o3top0a1Z5',
+                    embed: 'PLm8013_gmOkhPPLyfnk1P7_o3top0a1Z5'
+                },
+                {
+                    name: '🚀 Energy Boost',
+                    description: 'High-energy music for motivation',
+                    url: 'https://www.youtube.com/playlist?list=PL9G8zyZl8ZRZdemxh4wjqliFnUuE08ETj',
+                    embed: 'PL9G8zyZl8ZRZdemxh4wjqliFnUuE08ETj'
+                }
+            ],
+            audioFiles: [
+                { name: 'End of Summer', file: 'end-of-summer.mp3', description: 'Uplifting indie melody' },
+                { name: 'Chasing Daylight', file: 'chasing-daylight.mp3', description: 'Energetic instrumental' }
+            ]
+        },
+        stressed: {
+            title: '😰 Stress Relief',
+            subtitle: 'Calming music to help you unwind, relax, and find inner peace',
+            playlists: [
+                {
+                    name: '🧘 Deep Relaxation',
+                    description: 'Ambient sounds for stress relief and meditation',
+                    url: 'https://www.youtube.com/playlist?list=PLwslHpp7T0WVnDhw8_5cXWnWGWLuqC9eB',
+                    embed: 'PLwslHpp7T0WVnDhw8_5cXWnWGWLuqC9eB'
+                },
+                {
+                    name: '🌊 Nature Sounds',
+                    description: 'Natural sounds for deep relaxation',
+                    url: 'https://www.youtube.com/playlist?list=PLPabdEIQxVqAuGRr1o7PG8wfq0fHJZNwa',
+                    embed: 'PLPabdEIQxVqAuGRr1o7PG8wfq0fHJZNwa'
+                },
+                {
+                    name: '🎼 Calm Classical',
+                    description: 'Peaceful classical music for stress reduction',
+                    url: 'https://www.youtube.com/playlist?list=PLSXC1QOKVgMyD7psQn2OgGNX6mdI0lH6E',
+                    embed: 'PLSXC1QOKVgMyD7psQn2OgGNX6mdI0lH6E'
+                }
+            ],
+            audioFiles: [
+                { name: 'Soft Rain', file: 'soft-rain.mp3', description: 'Gentle rain sounds for relaxation' },
+                { name: 'Come Closer', file: 'come-closer.mp3', description: 'Soothing vocals for comfort' },
+                { name: 'Soft Breath', file: 'soft-breath.mp3', description: 'Meditative breathing sounds' }
+            ]
+        },
+        sad: {
+            title: '😢 Comfort & Healing',
+            subtitle: 'Gentle music to support you through difficult times and emotional healing',
+            playlists: [
+                {
+                    name: '💙 Healing Melodies',
+                    description: 'Gentle songs for emotional support',
+                    url: 'https://www.youtube.com/playlist?list=PL8srLQTE6oR3GBTwnE22mj2UrFzFK_tPs',
+                    embed: 'PL8srLQTE6oR3GBTwnE22mj2UrFzFK_tPs'
+                },
+                {
+                    name: '🤗 Comfort Songs',
+                    description: 'Soothing ballads for healing and hope',
+                    url: 'https://www.youtube.com/playlist?list=PLY022uAkaO1uPLPlewXmamFwB1T9DgftD',
+                    embed: 'PLY022uAkaO1uPLPlewXmamFwB1T9DgftD'
+                },
+                {
+                    name: '🌧️ Emotional Support',
+                    description: 'Music for processing emotions',
+                    url: 'https://www.youtube.com/playlist?list=PLLlb2C74bLzdu9dUe9QiuCMq-cLJtIbDZ',
+                    embed: 'PLLlb2C74bLzdu9dUe9QiuCMq-cLJtIbDZ'
+                }
+            ],
+            audioFiles: [
+                { name: 'Dreams', file: 'dreams.mp3', description: 'Dreamy ambient sounds for healing' },
+                { name: 'Come Closer', file: 'come-closer.mp3', description: 'Comforting vocal melodies' }
+            ]
+        },
+        tired: {
+            title: '😴 Rest & Restoration',
+            subtitle: 'Peaceful music to help you recharge, restore energy, and find deep rest',
+            playlists: [
+                {
+                    name: '🌙 Sleep Sounds',
+                    description: 'Deep sleep music and relaxing sounds',
+                    url: 'https://www.youtube.com/playlist?list=PLhAM4Z6_ykycC_78-gs82Hck4bfj7oMLw',
+                    embed: 'PLhAM4Z6_ykycC_78-gs82Hck4bfj7oMLw'
+                },
+                {
+                    name: '💤 Night Time Relief',
+                    description: 'Gentle sounds for peaceful rest',
+                    url: 'https://www.youtube.com/playlist?list=PL_A9MFp93jdKb96tSPmNAlnFJJPc9MOp-',
+                    embed: 'PL_A9MFp93jdKb96tSPmNAlnFJJPc9MOp-'
+                },
+                {
+                    name: '🛌 Bedtime Music',
+                    description: 'Ambient music for deep restoration',
+                    url: 'https://www.youtube.com/playlist?list=PLeq5deLX90_fCIoHVtWowBrhpHFYh4nHW',
+                    embed: 'PLeq5deLX90_fCIoHVtWowBrhpHFYh4nHW'
+                }
+            ],
+            audioFiles: [
+                { name: 'Soft Breath', file: 'soft-breath.mp3', description: 'Deep meditation for rest' },
+                { name: 'Soft Rain', file: 'soft-rain.mp3', description: 'Gentle rain for sleep' },
+                { name: 'Dreams', file: 'dreams.mp3', description: 'Ambient sounds for restoration' }
+            ]
+        },
+        focused: {
+            title: '🎯 Focus & Concentration',
+            subtitle: 'Music designed to enhance your focus, productivity, and mental clarity',
+            playlists: [
+                {
+                    name: '📚 Study Focus',
+                    description: 'Lo-fi beats and focus music for studying',
+                    url: 'https://www.youtube.com/playlist?list=PLOzlQzU-yr65nTKt7tEbHBnhZhU_5bVG',
+                    embed: 'PLOzlQzU-yr65nTKt7tEbHBnhZhU_5bVG'
+                },
+                {
+                    name: '🧠 Deep Concentration',
+                    description: 'Instrumental music for deep focus',
+                    url: 'https://www.youtube.com/playlist?list=PLqiHsh_gQp2S8-NXpUwNHQyDgAi2WBpiE',
+                    embed: 'PLqiHsh_gQp2S8-NXpUwNHQyDgAi2WBpiE'
+                },
+                {
+                    name: '⚡ Productivity Boost',
+                    description: 'Energizing music for enhanced productivity',
+                    url: 'https://www.youtube.com/playlist?list=PLSE6xYINkIG6-ILoq8jxSUBnhZhU_5bVG',
+                    embed: 'PLSE6xYINkIG6-ILoq8jxSUBnhZhU_5bVG'
+                }
+            ],
+            audioFiles: [
+                { name: 'Chasing Daylight', file: 'chasing-daylight.mp3', description: 'Instrumental focus music' },
+                { name: 'Dreams', file: 'dreams.mp3', description: 'Ambient concentration sounds' }
+            ]
+        }
+    };
+}
+
+function setupEventListeners() {
+    // Mood card clicks
+    document.querySelectorAll('.mood-card').forEach(card => {
+        card.addEventListener('click', function() {
+            const mood = this.dataset.mood;
+            selectMood(mood);
+        });
+    });
+
+    // Player controls
+    const playBtn = document.getElementById('playBtn');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const shuffleBtn = document.getElementById('shuffleBtn');
+
+    if (playBtn) playBtn.addEventListener('click', togglePlay);
+    if (prevBtn) prevBtn.addEventListener('click', playPrevious);
+    if (nextBtn) nextBtn.addEventListener('click', playNext);
+    if (shuffleBtn) shuffleBtn.addEventListener('click', toggleShuffle);
+}
+
+function selectMood(mood) {
+    currentMood = mood;
+    const config = MOOD_CONFIG[mood];
+    
+    if (!config) return;
+
+    // Update active mood card
+    document.querySelectorAll('.mood-card').forEach(card => {
+        card.classList.toggle('active', card.dataset.mood === mood);
+    });
+
+    // Show content section
+    const contentSection = document.getElementById('contentSection');
+    contentSection.style.display = 'block';
+
+    // Update titles
+    document.getElementById('moodTitle').textContent = config.title;
+    document.getElementById('moodSubtitle').textContent = config.subtitle;
+
+    // Load playlists
+    loadPlaylists(config.playlists);
+    loadAudioFiles(config.audioFiles);
+
+    // Show music player
+    document.getElementById('musicPlayer').style.display = 'block';
+}
+
+function loadPlaylists(playlists) {
+    const playlistGrid = document.getElementById('playlistGrid');
+    playlistGrid.innerHTML = '';
+
+    playlists.forEach((playlist, index) => {
+        const playlistCard = document.createElement('div');
+        playlistCard.className = 'playlist-card';
+        playlistCard.innerHTML = `
+            <div class="playlist-header">
+                <div class="playlist-icon">
+                    <i class="fab fa-youtube"></i>
+                </div>
+                <h3 class="playlist-title">${playlist.name}</h3>
+            </div>
+            <p class="playlist-description">${playlist.description}</p>
+            <div class="playlist-actions">
+                <button class="btn btn-primary" onclick="playYouTubePlaylist('${playlist.embed}', '${playlist.name}')">
+                    <i class="fas fa-play"></i> Play
+                </button>
+                <a href="${playlist.url}" target="_blank" class="btn btn-secondary">
+                    <i class="fab fa-youtube"></i> Open
+                </a>
+            </div>
+        `;
+        playlistGrid.appendChild(playlistCard);
+    });
+}
+
+function loadAudioFiles(audioFiles) {
+    const audioGrid = document.getElementById('audioGrid');
+    audioGrid.innerHTML = '';
+
+    audioFiles.forEach((audio, index) => {
+        const audioItem = document.createElement('div');
+        audioItem.className = 'audio-item';
+        audioItem.innerHTML = `
+            <div class="audio-icon">
+                <i class="fas fa-music"></i>
+            </div>
+            <div class="audio-info">
+                <div class="audio-title">${audio.name}</div>
+                <div class="audio-description">${audio.description}</div>
+            </div>
+            <div class="audio-controls">
+                <button class="audio-btn" onclick="playLocalAudio('${audio.file}', '${audio.name}')">
+                    <i class="fas fa-play"></i>
+                </button>
+            </div>
+        `;
+        audioGrid.appendChild(audioItem);
+    });
+}
+
+function loadYouTubeAPI() {
+    if (window.YT) {
+        console.log('YouTube API already loaded');
+        return;
+    }
+
+    window.onYouTubeIframeAPIReady = function() {
+        console.log('YouTube API ready');
+    };
+}
+
+function playYouTubePlaylist(playlistId, name) {
+    // Stop any current audio
+    if (currentAudio) {
+        currentAudio.pause();
+        currentAudio = null;
+    }
+
+    // Update player info
+    document.getElementById('currentSong').textContent = name;
+    document.getElementById('currentArtist').textContent = `${currentMood.charAt(0).toUpperCase() + currentMood.slice(1)} Mood Playlist`;
+
+    // Create or update YouTube player
+    if (currentPlayer) {
+        currentPlayer.loadPlaylist({
+            listType: 'playlist',
+            list: playlistId
+        });
+    } else {
+        currentPlayer = new YT.Player('youtube-player', {
+            height: '0',
+            width: '0',
+            playerVars: {
+                listType: 'playlist',
+                list: playlistId,
+                autoplay: 1
+            },
+            events: {
+                onReady: onPlayerReady,
+                onStateChange: onPlayerStateChange
+            }
+        });
+    }
+
+    // Track session start
+    fetch('/api/music-session/start', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            mood: currentMood,
+            playlist_name: name,
+            playlist_url: `https://www.youtube.com/playlist?list=${playlistId}`
+        })
+    }).catch(error => console.log('Session tracking failed:', error));
+}
+
+function playLocalAudio(filename, name) {
+    // Stop YouTube player if playing
+    if (currentPlayer) {
+        currentPlayer.pauseVideo();
+    }
+
+    // Stop any current audio
+    if (currentAudio) {
+        currentAudio.pause();
+    }
+
+    // Create new audio
+    currentAudio = new Audio(`{{ url_for('static', filename='audio/') }}${filename}`);
+    currentAudio.play();
+
+    // Update player info
+    document.getElementById('currentSong').textContent = name;
+    document.getElementById('currentArtist').textContent = 'Local Audio Collection';
+
+    // Update play button
+    const playBtn = document.getElementById('playBtn');
+    playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+
+    // Track session start
+    fetch('/api/music-session/start', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            mood: currentMood,
+            playlist_name: name,
+            playlist_url: `{{ url_for('static', filename='audio/') }}${filename}`
+        })
+    }).catch(error => console.log('Session tracking failed:', error));
+}
+
+function onPlayerReady(event) {
+    console.log('YouTube player ready');
+}
+
+function onPlayerStateChange(event) {
+    const playBtn = document.getElementById('playBtn');
+    
+    if (event.data === YT.PlayerState.PLAYING) {
+        playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+    } else if (event.data === YT.PlayerState.PAUSED) {
+        playBtn.innerHTML = '<i class="fas fa-play"></i>';
+    }
+}
+
+function togglePlay() {
+    if (currentPlayer && currentPlayer.getPlayerState) {
+        const state = currentPlayer.getPlayerState();
+        if (state === YT.PlayerState.PLAYING) {
+            currentPlayer.pauseVideo();
+        } else {
+            currentPlayer.playVideo();
+        }
+    } else if (currentAudio) {
+        if (currentAudio.paused) {
+            currentAudio.play();
+            document.getElementById('playBtn').innerHTML = '<i class="fas fa-pause"></i>';
+        } else {
+            currentAudio.pause();
+            document.getElementById('playBtn').innerHTML = '<i class="fas fa-play"></i>';
+        }
+    }
+}
+
+function playPrevious() {
+    if (currentPlayer && currentPlayer.previousVideo) {
+        currentPlayer.previousVideo();
+    }
+}
+
+function playNext() {
+    if (currentPlayer && currentPlayer.nextVideo) {
+        currentPlayer.nextVideo();
+    }
+}
+
+function toggleShuffle() {
+    const shuffleBtn = document.getElementById('shuffleBtn');
+    shuffleBtn.classList.toggle('active');
+    
+    if (currentPlayer && currentPlayer.setShuffle) {
+        currentPlayer.setShuffle(shuffleBtn.classList.contains('active'));
+    }
+}
+</script>
+{% endblock %}
