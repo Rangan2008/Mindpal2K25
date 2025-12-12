@@ -21,7 +21,7 @@ from functools import wraps
 
 # Configure Gemini API
 genai.configure(api_key=os.environ.get('api_key'))
-model = genai.GenerativeModel("gemini-1.5-flash")
+model = genai.GenerativeModel("gemini-2.5-flash")
 
 # Flask app setup
 template_dir = os.path.abspath('Templates')
@@ -1184,3 +1184,4 @@ if __name__ == '__main__':
     # No DB table creation needed for MongoDB
     port = int(os.environ.get('PORT', 10000))  # Render/Railway use $PORT
     app.run(host='0.0.0.0', port=port, debug=False)
+
